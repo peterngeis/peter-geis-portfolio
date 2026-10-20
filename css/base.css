@@ -1,0 +1,90 @@
+/*
+ * base.css
+ * Colors, font, page defaults, and pieces used everywhere: buttons (.pill) and the top navigation.
+ * Change the palette here: --paper is the background, --ink the main text, --lav the lavender accent.
+ */
+
+:root {
+  --paper: #000000;
+  --surface: #0B0A0F;
+  --ink: #FFFFFF;
+  --text: #DAD7E4;
+  --muted: #918DA0;
+  --line: #26242E;
+  --lav: #CEC2F6;
+  --lav-strong: #CEC2F6;
+  --on-lav-strong: #000000;
+  --kit-accent: #CEC2F6;
+  --ld-track: rgba(255, 255, 255, 0.14);
+  --on-lav: #000000;
+  --slate: #0F0E14;
+  --on-slate: #FFFFFF;
+  --on-slate-muted: #9C98AB;
+  --tip-bg: #FFFFFF;
+  --tip-ink: #000000;
+  --f: "Epilogue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --g: clamp(20px, 4vw, 56px);
+  --nav-h: 64px;
+  /* Section rhythm: headings sit 2 x --gap below the previous section and 2 x --gap above their content. */
+  --gap: clamp(28px, 4.5vh, 52px);
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + var(--nav-h)); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+html.locked { overflow: hidden; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--f);
+  font-size: clamp(17px, 0.42vw + 9px, 20px);   /* 17px up to ~1900px wide, growing to 20px on large monitors */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 60; background: var(--paper);
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; color: var(--ink); }
+:focus-visible { outline: 2px solid var(--lav-strong); outline-offset: 3px; }
+/* Content width grows on large monitors (1400px up to about 2080px) so sections fill big screens the way they fill a laptop. */
+.wrap { max-width: clamp(1400px, 78vw, 2080px); margin: 0 auto; padding: 0 var(--g); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.x { font-weight: 800; text-transform: uppercase; letter-spacing: -0.035em; line-height: 0.88; }
+
+.pill {
+  font: inherit; font-size: 15px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 44px; padding: 0 20px; border-radius: 999px;
+  border: 1.5px solid currentColor; background: transparent; color: inherit;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.pill.solid { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pill.solid:hover { background: var(--lav-strong); border-color: var(--lav-strong); color: var(--on-lav-strong); }
+.pill:not(.solid):hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pill .yt { width: 0; height: 0; border-left: 8px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+/* ============ Nav ============ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  color: #FFFFFF; mix-blend-mode: difference;
+}
+.nav .wrap { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: none; }
+.brand { font-weight: 700; text-decoration: none; letter-spacing: -0.01em; font-size: 17px; }
+.nav-links { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 34px); font-size: 15px; font-weight: 500; }
+.nav-links a { text-decoration: none; }
+.nav-links a:not(.pill):hover { text-decoration: underline; }
+.nav .pill { min-height: 38px; padding: 0 16px; }
+.nav .pill:hover { background: #FFFFFF; color: #000000; border-color: #FFFFFF; }

@@ -1,0 +1,27 @@
+/*
+ * footer.css
+ * The toolkit ticker and the lavender contact block.
+ */
+
+/* ============ Toolkit marquee ============ */
+.kit { background: var(--slate); color: var(--on-slate); padding: clamp(48px, 9vh, 96px) 0; overflow: hidden; }
+.kit-h { color: var(--on-slate); font-size: 15px; font-weight: 600; padding: 0 var(--g); margin-bottom: clamp(20px, 4vh, 36px); }
+.mq-row { display: flex; flex-wrap: wrap; gap: 0 0.5em; padding: 0 var(--g); font-size: clamp(30px, 4.6vw, 68px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.mq-row + .mq-row { margin-top: 0.2em; color: var(--kit-accent); }
+.mq-track { display: contents; list-style: none; margin: 0; padding: 0; }
+.mq-track li { display: inline-flex; align-items: center; gap: 0.5em; }
+.mq-track li::after { content: ""; width: 0.26em; height: 0.26em; border-radius: 50%; border: 0.07em solid currentColor; opacity: 0.6; }
+html.motion .mq-row { flex-wrap: nowrap; padding: 0; white-space: nowrap; gap: 0; will-change: transform; }
+html.motion .mq-track { display: flex; flex: none; gap: 0.5em; padding-right: 0.5em; }
+
+/* ============ Contact ============ */
+.contact { background: var(--lav); color: var(--on-lav); padding: clamp(96px, 16vh, 180px) 0 clamp(28px, 4vh, 44px); }
+.contact h2 { color: var(--on-lav); font-size: clamp(64px, 13vw, 230px); }
+.contact .lead { margin-top: clamp(24px, 4vh, 40px); max-width: 40ch; font-size: clamp(17px, 1.4vw, 20px); }
+.mail { display: inline-block; margin-top: clamp(24px, 4vh, 40px); font-size: clamp(26px, 4.4vw, 66px); font-weight: 700; letter-spacing: -0.03em; text-decoration-thickness: 3px; text-underline-offset: 0.16em; overflow-wrap: anywhere; }
+.mail:hover { text-decoration-thickness: 6px; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.contact .pill.solid { background: #000000; color: #FFFFFF; border-color: #000000; }
+.contact .pill.solid:hover { background: #FFFFFF; color: #000000; border-color: #FFFFFF; }
+.contact .pill:not(.solid):hover { background: var(--on-lav); color: var(--lav); border-color: var(--on-lav); }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: clamp(80px, 16vh, 160px); padding-top: 18px; border-top: 1.5px solid currentColor; font-size: 14px; font-weight: 500; }

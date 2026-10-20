@@ -1,0 +1,60 @@
+/*
+ * work.css
+ * The class demo (painter canvas, chart, controls) and the senior design section.
+ */
+
+/* ============ Work ============ */
+.work { background: var(--surface); padding: var(--gap) 0; }
+.work-h { font-size: clamp(40px, 7vw, 112px); }
+.feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: start; margin-top: calc(var(--gap) * 2); }
+.feature + .feature { padding-top: clamp(56px, 10vh, 112px); border-top: 1.5px solid var(--line); }
+.f-copy h3 { font-size: clamp(32px, 4vw, 56px); font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.f-meta { color: var(--muted); font-size: 15px; margin-top: 12px; }
+.f-copy > p:not(.f-meta):not(.built) { margin-top: 18px; max-width: 60ch; }
+.built { margin-top: 24px; font-size: 14px; color: var(--muted); }
+.built b { color: var(--text); font-weight: 600; }
+.links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; color: var(--ink); }
+
+/* painter */
+/* The canvas is sized to the screen height so the whole demo, title to the scrub note, fits in one view.
+   400px is the room taken by the chart, controls, readout, note, and nav bar. */
+.pt-canvas { position: relative; width: min(100%, max(300px, calc(100svh - 400px))); margin: 0 auto; }
+.pt-canvas canvas { display: block; width: 100%; aspect-ratio: 1 / 1; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; background: #FFFFFF; border-radius: 4px; border: 1.5px solid var(--ink); }
+.pt-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pt-status[hidden] { display: none; }
+.pt-chart { position: relative; margin-top: 16px; height: 108px; border: 1.5px solid var(--line); border-radius: 4px; background: var(--paper); cursor: ew-resize; touch-action: none; }
+.pt-chart svg { position: absolute; inset: 8px 0 22px; width: 100%; height: calc(100% - 30px); overflow: visible; }
+.pt-chart .c-alt { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; opacity: 0.7; }
+.pt-chart .c-cur { fill: none; stroke: var(--ink); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.pt-chart .ph { stroke: var(--lav-strong); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.ax { position: absolute; font-size: 12px; color: var(--muted); }
+.ax-y { left: 10px; top: 6px; }
+.ax-x { right: 10px; bottom: 4px; }
+.ax-k { left: 10px; bottom: 4px; display: flex; gap: 14px; }
+.ax-k i { display: inline-block; width: 16px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 2.5px solid var(--ink); }
+.ax-k i.alt { border-top: 1.5px dashed var(--muted); }
+.pt-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; color: var(--ink); }
+.seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 3px; margin: 0; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { padding: 8px 15px; border-radius: 999px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.seg input:checked + label { background: var(--ink); color: var(--paper); }
+.seg input:focus-visible + label { outline: 2px solid var(--lav-strong); outline-offset: 2px; }
+.pt-read { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 14px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pt-read b { color: var(--ink); font-weight: 600; }
+.pt-note { font-size: 14px; line-height: 1.5; color: var(--muted); margin-top: 10px; max-width: 60ch; }
+
+/* senior design */
+.sd { padding: var(--gap) 0; }
+.banner { margin: calc(var(--gap) * 2) 0 0; }
+.banner img { width: 100%; height: auto; aspect-ratio: 2400 / 719; object-fit: cover; object-position: 50% 50%; }
+.banner .cap { padding: 0 var(--g); }
+/* The MTS photo sets the height; the sensor assembly stays square and the foam photo crops to fill the rest. */
+.ppd-media { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); grid-template-rows: auto 1fr; gap: 16px 12px; }
+.ppd-media figure { margin: 0; }
+.ppd-media .tall { grid-row: span 2; }
+.ppd-media img { width: 100%; height: auto; object-fit: cover; border-radius: 4px; }
+.ppd-media .tall img { aspect-ratio: 3 / 4.4; max-height: calc(100svh - var(--nav-h) - 80px); }
+.ppd-media .sq img { aspect-ratio: 1 / 1; }
+.ppd-media .fill { display: flex; flex-direction: column; min-height: 0; }
+.ppd-media .fill img, .ppd-media .fill video { flex: 1 1 0; min-height: 0; width: 100%; aspect-ratio: auto; object-fit: cover; object-position: 50% 60%; border-radius: 4px; display: block; background: var(--slate); }
+.cap { font-size: 13px; color: var(--muted); margin-top: 6px; }
