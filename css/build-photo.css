@@ -44,7 +44,8 @@ html.motion .dot::after { content: ""; position: absolute; inset: -3px; border-r
 .hs.flip .tip { left: auto; right: 44px; transform: translate(6px, -50%); }
 .tip::before { content: ""; position: absolute; top: 0; bottom: 0; right: 100%; width: 6px; }
 .hs.flip .tip::before { right: auto; left: 100%; }
-.hs:hover .tip, .hs:focus-within .tip, .hs.open .tip { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+/* --dx and --dy are set by js/build-photo.js to keep the card on screen. */
+.hs:hover .tip, .hs:focus-within .tip, .hs.open .tip { opacity: 1; transform: translate(var(--dx, 0px), calc(-50% + var(--dy, 0px))); pointer-events: auto; }
 .tip b { display: block; font-weight: 700; }
 .tip > span { display: block; font-size: 12.5px; font-weight: 500; color: #5F5A72; margin-top: 2px; }
 .tip-links { display: flex !important; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px !important; }

@@ -85,6 +85,43 @@
 
   /* ---------- Part points: hover on desktop, tap on phones ---------- */
 
+  var EDGE = 12;   // minimum gap, in pixels, between a part card and the edge of the screen
+
+  // Keeps a part's card fully on screen. The card normally sits beside its dot; when that
+  // would run off an edge (common on phones), it moves below the dot instead, or above it
+  // near the bottom, and slides sideways until it fits.
+  function placeTip(h) {
+    var tip = h.querySelector(".tip");
+    var dot = h.getBoundingClientRect();
+    var area = stage.getBoundingClientRect();
+    var navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 64;
+    var minX = Math.max(area.left, 0) + EDGE, maxX = Math.min(area.right, window.innerWidth) - EDGE;
+    var minY = Math.max(area.top, 0) + navH + EDGE, maxY = Math.min(area.bottom, window.innerHeight) - EDGE;
+    // Stay above the "My current build" caption, which sits under the photo's dark fade.
+    var cap = reveal.querySelector(".frame-cap");
+    if (cap) {
+      maxY = Math.min(maxY, cap.getBoundingClientRect().top - EDGE);
+    }
+    var w = tip.offsetWidth, ht = tip.offsetHeight;
+
+    // Where the card lands with no adjustment (offsetLeft/Top ignore the fade-in slide).
+    var left = dot.left + tip.offsetLeft;
+    var top = dot.top + tip.offsetTop - ht / 2;
+    var newLeft = left, newTop = top;
+
+    if (left < minX || left + w > maxX) {
+      var cx = dot.left + dot.width / 2;
+      newLeft = clamp(cx - w / 2, minX, Math.max(minX, maxX - w));
+      newTop = dot.bottom + 6;
+      if (newTop + ht > maxY) {
+        newTop = dot.top - 6 - ht;
+      }
+    }
+    newTop = clamp(newTop, minY, Math.max(minY, maxY - ht));
+    h.style.setProperty("--dx", (newLeft - left).toFixed(1) + "px");
+    h.style.setProperty("--dy", (newTop - top).toFixed(1) + "px");
+  }
+
   function closePoints(except) {
     points.forEach(function (o) {
       if (o === except) {
@@ -99,8 +136,24 @@
     b.addEventListener("click", function () {
       var open = !h.classList.contains("open");
       closePoints(h);
+      if (open) {
+        placeTip(h);
+      }
       h.classList.toggle("open", open);
       b.setAttribute("aria-expanded", String(open));
+    });
+    h.addEventListener("pointerenter", function () {
+      placeTip(h);
+    });
+    h.addEventListener("focusin", function () {
+      placeTip(h);
+    });
+  });
+  window.addEventListener("resize", function () {
+    points.forEach(function (h) {
+      if (h.classList.contains("open")) {
+        placeTip(h);
+      }
     });
   });
   document.addEventListener("click", function (e) {
