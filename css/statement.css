@@ -1,0 +1,76 @@
+/*
+ * statement.css
+ * The introduction: the large statement, the Sensō-ji photo, and the two paragraphs.
+ * Script: js/statement.js
+ */
+
+.statement {
+  padding: clamp(100px, 22vh, 220px) 0 clamp(80px, 16vh, 160px);
+}
+
+.statement-text {
+  font-size: clamp(30px, 4.5vw, 70px);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+  max-width: 19em;
+}
+
+.statement-text .statement-word {
+  transition: opacity 0.2s linear;
+}
+
+.statement-paragraph {
+  margin: clamp(40px, 8vh, 80px) 0 0 auto;
+  max-width: 46ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.6;
+}
+
+.statement-paragraph + .statement-paragraph {
+  margin-top: 1.1em;
+}
+
+.statement-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 5vw, 88px);
+  align-items: start;
+  margin-top: clamp(40px, 8vh, 80px);
+}
+
+.statement-figure {
+  margin: 0;
+  max-width: 100%;
+}
+
+/* width is set by js/statement.js so the photo fits on screen with the statement */
+.statement-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.statement-figure .caption a {
+  color: inherit;
+}
+
+.statement-figure .caption {
+  text-wrap: balance;
+}
+
+.statement-copy .statement-paragraph {
+  margin: 0;
+  max-width: 46ch;
+}
+
+.statement-copy .statement-paragraph + .statement-paragraph {
+  margin-top: 1.1em;
+}
+
+@media (max-width: 860px) {
+  .statement-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

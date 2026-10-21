@@ -10,35 +10,57 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Peter Geis, Systems Engineer</title>
-<meta name="description" content="Peter Geis is a systems engineer in integration, validates embedded control software, and builds test automation.">
-<!-- Runs before the page draws: marks JS as available, checks reduced motion, and shows the loader once per visit. -->
+<meta name="description" content="Peter Geis is a systems engineer who integrates and tests advanced phased array radars, validates embedded control software, and builds test automation.">
+<!-- Runs before the page draws: marks JavaScript as available, checks reduced motion, and remembers
+     that the loader has already played once this visit. -->
 <script>
-(function () {
-  var d = document.documentElement;
-  d.classList.add("js");
-  try { if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("motion"); } catch (e) {}
-  try { if (sessionStorage.getItem("pg-booted")) d.classList.add("booted"); sessionStorage.setItem("pg-booted", "1"); } catch (e) {}
-})();
+  (function () {
+    const root = document.documentElement;
+    root.classList.add("has-javascript");
+
+    try {
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        root.classList.add("motion-enabled");
+      }
+    } catch (error) {
+      // Older browsers without matchMedia simply get no motion.
+    }
+
+    try {
+      if (sessionStorage.getItem("loader-seen")) {
+        root.classList.add("loader-seen");
+      }
+      sessionStorage.setItem("loader-seen", "true");
+    } catch (error) {
+      // Storage can be blocked (private browsing); the loader then plays on every visit.
+    }
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300..900&display=swap">
-<!-- Styles, in cascade order. responsive.css must stay last. -->
+<!-- Styles: base first, then one file per page section in page order, and responsive.css last so its rules win. -->
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/hero.css">
+<link rel="stylesheet" href="css/statement.css">
+<link rel="stylesheet" href="css/scroll-pause.css">
+<link rel="stylesheet" href="css/field-photos.css">
+<link rel="stylesheet" href="css/split.css">
+<link rel="stylesheet" href="css/experience.css">
+<link rel="stylesheet" href="css/class-demo.css">
+<link rel="stylesheet" href="css/senior-design.css">
 <link rel="stylesheet" href="css/build-photo.css">
-<link rel="stylesheet" href="css/sections.css">
-<link rel="stylesheet" href="css/work.css">
 <link rel="stylesheet" href="css/builds.css">
-<link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/toolkit.css">
+<link rel="stylesheet" href="css/contact.css">
 <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
 <div class="loader" aria-hidden="true">
-  <div class="ld-top"><b>Peter Geis</b><span>Filling the loop</span></div>
-  <div class="ld-temp"><span id="ld-num">18</span><span class="ld-unit">°C<br>Liquid</span></div>
-  <div class="ld-bar"><i></i></div>
+  <div class="loader-header"><b>Peter Geis</b><span>Filling the loop</span></div>
+  <div class="loader-temperature"><span id="loader-number">18</span><span class="loader-unit">°C<br>Liquid</span></div>
+  <div class="loader-bar"><span class="loader-bar-fill"></span></div>
 </div>
 
 <!-- ========== Top navigation ========== -->
@@ -46,8 +68,8 @@
   <div class="wrap">
     <a class="brand" href="#top">Peter Geis</a>
     <nav class="nav-links" aria-label="Sections">
-      <a href="#on">On the clock</a>
-      <a href="#off">Off the clock</a>
+      <a href="#on-the-clock">On the clock</a>
+      <a href="#off-the-clock">Off the clock</a>
       <a href="#contact">Contact</a>
       <a class="pill" href="https://drive.google.com/file/d/1tQSf-gUoQpiIY4QyLF8mrFGBRCmsN-kr/view?usp=sharing" target="_blank" rel="noopener">Résumé</a>
     </nav>
@@ -56,17 +78,19 @@
 
 <main>
   <!-- ========== Landing: name, ASCII radar (edit the drawing inside .radar-art), role line ========== -->
-  <section class="hero" id="top" aria-labelledby="name">
-    <h1 class="giant x" id="name" aria-label="Peter Geis">
-      <span class="gl" aria-hidden="true"><span class="gi"><span class="ch" style="--i:0">P</span><span class="ch" style="--i:1">e</span><span class="ch" style="--i:2">t</span><span class="ch" style="--i:3">e</span><span class="ch" style="--i:4">r</span></span></span>
-      <span class="gl gl2" aria-hidden="true"><span class="gi"><span class="ch" style="--i:5">G</span><span class="ch" style="--i:6">e</span><span class="ch" style="--i:7">i</span><span class="ch" style="--i:8">s</span></span></span>
+  <section class="hero" id="top" aria-labelledby="hero-heading">
+    <!-- The letters sit side by side with no whitespace between them, so no gaps appear in the name. -->
+    <h1 class="hero-name display-type" id="hero-heading" aria-label="Peter Geis">
+      <span class="name-line" aria-hidden="true"><span class="name-line-text"><span class="name-letter" style="--letter-index:0">P</span><span class="name-letter" style="--letter-index:1">e</span><span class="name-letter" style="--letter-index:2">t</span><span class="name-letter" style="--letter-index:3">e</span><span class="name-letter" style="--letter-index:4">r</span></span></span>
+      <span class="name-line name-line-second" aria-hidden="true"><span class="name-line-text"><span class="name-letter" style="--letter-index:5">G</span><span class="name-letter" style="--letter-index:6">e</span><span class="name-letter" style="--letter-index:7">i</span><span class="name-letter" style="--letter-index:8">s</span></span></span>
     </h1>
     <div class="hero-meta">
       <p><b>Senior Systems Engineer</b><br>RTX, integration and test</p>
       <p><b>M.S. Computer Science</b><br>Northeastern University</p>
-      <p class="cue">Scroll <i></i></p>
+      <p class="cue">Scroll <span class="cue-line"></span></p>
     </div>
-    <div class="radar" id="radar" aria-hidden="true"><span class="radar-read" id="radar-read">SCAN</span><span class="radar-art">                              \
+    <!-- The radar uses white-space: pre, so its spans stay adjacent (any whitespace between them would show as blank lines). -->
+    <div class="radar" id="radar" aria-hidden="true"><span class="radar-readout" id="radar-readout">SCAN</span><span class="radar-art">                              \
                                \
                              ___o
                              \###\
@@ -82,139 +106,160 @@
   |_______________|_____________________|¯¯¯¯¯¯¯¯¯¯¯¯¯¯
      ||  ||  ||                        ||
      (@) (@) (@)                      _||_</span><span class="radar-note">Not representative of radar performance. Just a fun animation.</span></div>
-    <svg class="beam" id="beam" aria-hidden="true" focusable="false">
-      <line class="path" x1="0" y1="0" x2="0" y2="0"/>
-      <line class="p-out" x1="0" y1="0" x2="0" y2="0"/>
-      <line class="p-back" x1="0" y1="0" x2="0" y2="0"/>
+    <svg class="radar-beams" id="radar-beams" aria-hidden="true" focusable="false">
+      <line class="beam-track" x1="0" y1="0" x2="0" y2="0"/>
+      <line class="beam-pulse-out" x1="0" y1="0" x2="0" y2="0"/>
+      <line class="beam-pulse-return" x1="0" y1="0" x2="0" y2="0"/>
     </svg>
-    <svg class="beam beam-x" id="beam-x" aria-hidden="true" focusable="false">
-      <g class="tgt" transform="translate(-100 -100)">
-        <circle class="ping" cx="0" cy="0" r="8"/>
-        <path class="ret" d="M-16 -9 V-16 H-9 M9 -16 H16 V-9 M16 9 V16 H9 M-9 16 H-16 V9"/>
-        <text class="tlabel" x="22" y="-10">TRK 01</text>
+    <svg class="radar-beams radar-target-layer" id="radar-target-layer" aria-hidden="true" focusable="false">
+      <g class="target" transform="translate(-100 -100)">
+        <circle class="target-ping" cx="0" cy="0" r="8"/>
+        <path class="target-reticle" d="M-16 -9 V-16 H-9 M9 -16 H16 V-9 M16 9 V16 H9 M-9 16 H-16 V9"/>
+        <text class="target-label" x="22" y="-10">TRK 01</text>
       </g>
     </svg>
-    <div class="hero-x" id="hero-x" aria-hidden="true"></div>
+    <div class="hero-reveal" id="hero-reveal" aria-hidden="true"></div>
   </section>
 
   <!-- ========== Introduction ========== -->
   <section class="statement" aria-label="Introduction">
-    <div class="wrap">
-      <p class="big" id="stmt">As a systems engineer, I integrate and test advanced phased array radars. My favorite part of the job is catching a complex bug and driving corrective actions.</p>
-      <div class="stmt-grid">
-        <figure class="stmt-fig">
-          <img src="images/sensoji.webp" width="1600" height="1066" alt="Peter grinning and holding up a Tombow MONO mechanical pencil and a small package in a covered shopping street hung with red banners">
-          <figcaption class="cap">Near Sensō-ji, Tokyo (home 2007–2010), with my favorite Tombow MONO.</figcaption>
-        </figure>
-        <div class="stmt-copy">
-      <p class="sub">My background is in mechanical engineering, but my career grew into test software development across Linux and Windows. The part I enjoy most is working with a team of specialists to analyze system states until we find what’s really going on.</p>
-      <p class="sub">I’m pursuing a Master’s in Computer Science at Northeastern to build software fundamentals that match my systems intuition, so I can bring the rigor I’ve built in hardware reliability and test automation to medtech or robotics, where the platform is not just a tool but an architecture designed for the public good.</p>
+    <div class="scroll-pause" data-pause="intro">
+      <div class="wrap">
+        <p class="statement-text" id="statement-text">As a systems engineer, I integrate and test advanced phased array radars. My favorite part of the job is catching a complex bug and driving corrective actions.</p>
+        <div class="statement-grid">
+          <figure class="statement-figure">
+            <img src="images/sensoji.webp" width="1600" height="1066" alt="Peter grinning and holding up a Tombow MONO mechanical pencil and a small package in a covered shopping street hung with red banners">
+            <figcaption class="caption">Near Sensō-ji, Tokyo (home 2007–2010), with my favorite Tombow MONO.</figcaption>
+          </figure>
+          <div class="statement-copy">
+            <p class="statement-paragraph">My background is in mechanical engineering, but my career grew into test software development across Linux and Windows. The part I enjoy most is working with a team of specialists to analyze system states until we find what’s really going on.</p>
+            <p class="statement-paragraph">I’m pursuing a Master’s in Computer Science at Northeastern to build software fundamentals that match my systems intuition, so I can bring the rigor I’ve built in hardware reliability and test automation to medtech or robotics, where the platform is not just a tool but an architecture designed for the public good.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== Field photos (each .note is one photo; --h is its height in screen %) ========== -->
-  <section class="notes" aria-labelledby="notes-h">
-    <div class="notes-stage">
-      <div class="notes-head wrap">
-        <h2 id="notes-h" class="x">Field photos</h2>
+  <!-- ========== Field photos (each .field-photo is one photo; --photo-height is its height in screen %) ========== -->
+  <section class="field-photos" aria-labelledby="field-photos-heading">
+    <div class="field-photos-stage">
+      <div class="field-photos-header wrap">
+        <h2 id="field-photos-heading" class="display-type">Field photos</h2>
         <p>Test sites, labs, and workshops along the way.</p>
       </div>
-      <div class="strip" id="strip">
-        <figure class="note" style="--h:50"><img src="images/portrait.webp" width="409" height="507" alt="Peter smiling in a cowboy hat in front of green field equipment"><figcaption><b>On site</b><span>White Sands, 2024</span></figcaption></figure>
-        <figure class="note" style="--h:46"><img src="images/launch.webp" width="259" height="553" alt="A model rocket launching over a grassy field"><figcaption><b>Flight test</b><span>Boulder, 2021</span></figcaption></figure>
-        <figure class="note" style="--h:54"><img src="images/foam.webp" width="825" height="1100" alt="A foam disk compressed between two steel platens of a testing machine"><figcaption><b>Foam compression testing</b><span>Boulder, 2021</span></figcaption></figure>
-        <figure class="note" style="--h:44"><img src="images/assembly.webp" width="1200" height="900" alt="Hands assembling a stack of sensor boards"><figcaption><b>Building the sensor stack</b><span>Boulder, 2021</span></figcaption></figure>
-        <figure class="note" style="--h:52"><img src="images/vibe.webp" width="750" height="1000" alt="A small sensor assembly bolted to a vibration table"><figcaption><b>Vibration table setup</b><span>Boulder, 2021</span></figcaption></figure>
-        <figure class="note" style="--h:48"><img src="images/headlamp.webp" width="826" height="824" alt="Peter in a headlamp and headphones working inside a PC case"><figcaption><b>Building a PC</b><span>Boston, 2022</span></figcaption></figure>
+      <div class="photo-strip" id="photo-strip">
+        <figure class="field-photo" style="--photo-height: 50">
+          <img src="images/portrait.webp" width="409" height="507" alt="Peter smiling in a cowboy hat in front of green field equipment">
+          <figcaption><b>On site</b><span>White Sands, 2024</span></figcaption>
+        </figure>
+        <figure class="field-photo" style="--photo-height: 46">
+          <img src="images/launch.webp" width="259" height="553" alt="A model rocket launching over a grassy field">
+          <figcaption><b>Flight test</b><span>Boulder, 2021</span></figcaption>
+        </figure>
+        <figure class="field-photo" style="--photo-height: 54">
+          <img src="images/foam.webp" width="825" height="1100" alt="A foam disk compressed between two steel platens of a testing machine">
+          <figcaption><b>Foam compression testing</b><span>Boulder, 2021</span></figcaption>
+        </figure>
+        <figure class="field-photo" style="--photo-height: 44">
+          <img src="images/assembly.webp" width="1200" height="900" alt="Hands assembling a stack of sensor boards">
+          <figcaption><b>Building the sensor stack</b><span>Boulder, 2021</span></figcaption>
+        </figure>
+        <figure class="field-photo" style="--photo-height: 52">
+          <img src="images/vibe.webp" width="750" height="1000" alt="A small sensor assembly bolted to a vibration table">
+          <figcaption><b>Vibration table setup</b><span>Boulder, 2021</span></figcaption>
+        </figure>
+        <figure class="field-photo" style="--photo-height: 48">
+          <img src="images/headlamp.webp" width="826" height="824" alt="Peter in a headlamp and headphones working inside a PC case">
+          <figcaption><b>Building a PC</b><span>Boston, 2022</span></figcaption>
+        </figure>
       </div>
-      <div class="notes-prog" aria-hidden="true"><i></i></div>
+      <div class="field-photos-progress" aria-hidden="true"><span class="field-photos-progress-fill"></span></div>
     </div>
   </section>
 
   <!-- ========== On the clock / Off the clock ========== -->
   <section class="split" aria-label="Two sides of my work">
-    <a class="panel pn-on" href="#on">
-      <span class="p-t x">On the<br>clock</span>
-      <span class="p-d">Integration and test, product sustainment, and a Sandia National Laboratories project.<span class="p-go">See my experience</span></span>
-      <img class="p-img" src="images/exploded.webp" width="480" height="960" alt="">
+    <a class="panel panel-on-the-clock" href="#on-the-clock">
+      <span class="panel-title display-type">On the<br>clock</span>
+      <span class="panel-description">Integration and test, product sustainment, and a Sandia National Laboratories project.<span class="panel-action">See my experience</span></span>
+      <img class="panel-image" src="images/exploded.webp" width="480" height="960" alt="">
     </a>
-    <a class="panel pn-off" href="#off">
-      <span class="p-t x">Off the<br>clock</span>
-      <span class="p-d">Liquid-cooled PCs, a ski winch, a go-kart, and more…<span class="p-go">See my builds</span></span>
-      <img class="p-img" src="images/weld_tall.webp" width="366" height="735" alt="">
+    <a class="panel panel-off-the-clock" href="#off-the-clock">
+      <span class="panel-title display-type">Off the<br>clock</span>
+      <span class="panel-description">Liquid-cooled PCs, a ski winch, a go-kart, and more…<span class="panel-action">See my builds</span></span>
+      <img class="panel-image" src="images/weld_tall.webp" width="366" height="735" alt="">
     </a>
   </section>
 
   <!-- ========== Experience timeline (data-year drives the rolling year) ========== -->
-  <section class="exp" id="on" aria-labelledby="on-h">
+  <section class="experience" id="on-the-clock" aria-labelledby="on-the-clock-heading">
     <div class="wrap">
-      <h2 class="exp-h x" id="on-h">On the clock</h2>
-      <div class="exp-grid">
+      <h2 class="experience-heading display-type" id="on-the-clock-heading">On the clock</h2>
+      <div class="experience-grid">
         <div class="dial" aria-hidden="true">
-          <div class="odo"><span class="reel"></span><span class="reel"></span><span class="reel"></span><span class="reel"></span></div>
+          <div class="odometer"><span class="reel"></span><span class="reel"></span><span class="reel"></span><span class="reel"></span></div>
           <ol class="rail"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
-          <p class="dial-role" id="dial-role">B.S. Mechanical Engineering</p>
+          <p class="dial-title" id="dial-title">B.S. Mechanical Engineering</p>
         </div>
-        <div class="stops">
-          <article class="stop" data-year="2017">
-            <p class="span">2017–2021</p>
+        <div class="timeline">
+          <article class="timeline-entry" data-year="2017">
+            <p class="entry-dates">2017–2021</p>
             <h3>B.S. Mechanical Engineering</h3>
-            <p class="org">University of Colorado Boulder</p>
+            <p class="entry-organization">University of Colorado Boulder</p>
             <p>Senior design with Sandia National Laboratories: a payload device that records a model rocket’s flight dynamics and protects the data through impact. Our team won Best Experimental Design and Validation among six universities.</p>
             <p>Summer 2019: global sustainability and macroeconomics at Vesalius College in Brussels.</p>
-            <a class="more" href="#ppd">See the project</a>
+            <a class="entry-link" href="#senior-design">See the project</a>
           </article>
-          <article class="stop" data-year="2018">
-            <p class="span">Summer 2018</p>
+          <article class="timeline-entry" data-year="2018">
+            <p class="entry-dates">Summer 2018</p>
             <h3>Mechanical Engineering Intern</h3>
-            <p class="org">Diamond Diagnostics, Holliston, MA</p>
-            <ul class="dots">
+            <p class="entry-organization">Diamond Diagnostics, Holliston, MA</p>
+            <ul class="bullet-list">
               <li>Designed a linear-motion locking mechanism for the cellular membrane fixture, with compression fittings for fluid lines and snap-fit plastic parts.</li>
               <li>Designed stamped sheet-metal brackets to steady probe insertion, checked with SolidWorks sheet metal modeling and Abaqus FEA.</li>
               <li>Ran operational qualification on 30 SmartLyte Plus electrolyte analyzers to ISO 9001:2015.</li>
             </ul>
+            <a class="entry-link" href="https://www.diamonddiagnostics.com/analyzers/smartlyte-plus-electrolyte-analyzer" target="_blank" rel="noopener">See the SmartLyte Plus</a>
           </article>
-          <article class="stop" data-year="2020">
-            <p class="span">Summer 2020</p>
+          <article class="timeline-entry" data-year="2020">
+            <p class="entry-dates">Summer 2020</p>
             <h3>Systems Engineering Intern</h3>
-            <p class="org">Raytheon Technologies, Life Cycle Engineering, Andover, MA</p>
+            <p class="entry-organization">Raytheon Technologies, Life Cycle Engineering, Andover, MA</p>
             <p>A summer with the life cycle engineering team, which I rejoined full time after graduating.</p>
           </article>
-          <article class="stop" data-year="2021">
-            <p class="span">2021–2023</p>
+          <article class="timeline-entry" data-year="2021">
+            <p class="entry-dates">2021–2023</p>
             <h3>Systems Engineer, Life Cycle Engineering</h3>
-            <p class="org">Raytheon Technologies, Tewksbury, MA</p>
-            <ul class="dots">
+            <p class="entry-organization">Raytheon Technologies, Tewksbury, MA</p>
+            <ul class="bullet-list">
               <li>Built supply chain, fielding, and logistics models, drawing on failure rates, transport times, and tooling data across radar subassemblies.</li>
               <li>Developed deployment concepts of operations and material fielding plans, plus NLP tooling that kept acronyms consistent across technical documents.</li>
             </ul>
           </article>
-          <article class="stop" data-year="2023">
-            <p class="span">2023–2025</p>
+          <article class="timeline-entry" data-year="2023">
+            <p class="entry-dates">2023–2025</p>
             <h3>Systems Engineer II, Systems Integration &amp; Test</h3>
-            <p class="org">RTX, Pelham, NH</p>
-            <ul class="dots">
+            <p class="entry-organization">RTX, Pelham, NH</p>
+            <ul class="bullet-list">
               <li>Validate embedded power, cooling, and actuator control algorithms through model verification, hardware-in-the-loop testing, and parameter tuning.</li>
               <li>Lead hardware acceptance test procedures and missile flight tests on a $5B+ production program, delivering on-time sell-offs under compressed schedules.</li>
               <li>Built automated RF test workflows and data processing for phased-array radar, and consolidated three repositories into a self-hosted GitLab with CI/CD.</li>
               <li>Received six RTX Team Excellence and Spot awards for isolating production-halting hardware defects in the field.</li>
             </ul>
           </article>
-          <article class="stop" data-year="2024">
-            <p class="span">January–April 2024</p>
+          <article class="timeline-entry" data-year="2024">
+            <p class="entry-dates">January–April 2024</p>
             <h3>On-site rotation, White Sands Missile Range</h3>
-            <p class="org">RTX Mission and Capability Verification Center, New Mexico</p>
+            <p class="entry-organization">RTX Mission and Capability Verification Center, New Mexico</p>
             <p>Worked with range test control during mission operations, wrote qualification software, and validated test-mission data.</p>
-            <a class="more" href="https://www.rtx.com/news/news-center/2024/03/21/rtxs-raytheon-lower-tier-air-and-missile-defense-sensor-detects-and-engages-comp" target="_blank" rel="noopener">Read RTX’s Announcements</a>
+            <a class="entry-link" href="https://www.rtx.com/news/news-center/2024/03/21/rtxs-raytheon-lower-tier-air-and-missile-defense-sensor-detects-and-engages-comp" target="_blank" rel="noopener">Read RTX’s Announcements</a>
           </article>
-          <article class="stop" data-year="2025">
-            <p class="span">2025–now</p>
+          <article class="timeline-entry" data-year="2025">
+            <p class="entry-dates">2025–now</p>
             <h3>Senior Systems Engineer, and back to school</h3>
-            <p class="org">RTX and Northeastern University, Khoury College of Computer Sciences</p>
+            <p class="entry-organization">RTX and Northeastern University, Khoury College of Computer Sciences</p>
             <p>Promoted to Senior Systems Engineer in June. In September, I started an M.S. in Computer Science at Northeastern while continuing to work full time. 3.83 GPA so far, finishing in May 2028.</p>
-            <a class="more" href="#painter">See my first systems programming project</a>
+            <a class="entry-link" href="#painter">See my first systems programming project</a>
           </article>
         </div>
       </div>
@@ -222,213 +267,357 @@
   </section>
 
   <!-- ========== Class demo: concurrent canvas painter ========== -->
-  <section class="work" aria-labelledby="work-h">
+  <section class="class-demo" aria-labelledby="class-demo-heading">
     <div class="wrap">
-      <h2 class="work-h x" id="work-h">Class demo</h2>
+      <h2 class="section-heading display-type" id="class-demo-heading">Class demo</h2>
 
-      <article class="feature" id="painter" aria-labelledby="painter-h">
-        <div class="f-media">
-          <div class="pt-canvas">
-            <canvas id="pt" width="240" height="240" role="img" aria-label="Animation of painter threads filling a white canvas with shades of one color"></canvas>
-            <p class="pt-status" id="pt-status" hidden>Running painters</p>
+      <div class="scroll-pause" data-pause="painter">
+        <article class="feature" id="painter" aria-labelledby="painter-heading">
+          <div class="scroll-pause" data-pause="painter">
+            <div class="feature-media">
+              <div class="painter-stage">
+                <canvas id="painter-canvas" width="240" height="240" role="img" aria-label="Animation of painter threads filling a white canvas with shades of one color"></canvas>
+                <p class="painter-status" id="painter-status" hidden>Running painters</p>
+              </div>
+              <div class="painter-chart" id="painter-chart" role="slider" tabindex="0" aria-label="Playback position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <svg viewBox="0 0 600 100" preserveAspectRatio="none" aria-hidden="true"><path class="curve-other"/><path class="curve-current"/><line class="playhead" x1="0" y1="-4" x2="0" y2="104"/></svg>
+                <span class="chart-label chart-label-vertical" aria-hidden="true">Canvas painted</span>
+                <span class="chart-label chart-legend" aria-hidden="true"><span><span class="legend-swatch"></span>Current</span><span><span class="legend-swatch legend-swatch-dashed"></span>Other rate</span></span>
+                <span class="chart-label chart-label-horizontal" aria-hidden="true">Playback time</span>
+              </div>
+              <div class="painter-controls">
+                <button class="pill filled" id="painter-play" type="button">Play</button>
+                <fieldset class="segmented-control" id="painter-render-rate">
+                  <legend class="visually-hidden">Render rate</legend>
+                  <input type="radio" name="rate" id="render-rate-linear" value="linear"><label for="render-rate-linear">Linear</label>
+                  <input type="radio" name="rate" id="render-rate-nonlinear" value="nonlinear" checked><label for="render-rate-nonlinear">Non-linear</label>
+                </fieldset>
+                <button class="pill" id="painter-new-run" type="button">New run</button>
+              </div>
+              <p class="painter-readout" aria-live="off">
+                <span>Frame <b id="painter-frame-number">–</b></span>
+                <span><b id="painter-percent">0%</b> painted</span>
+                <span><b id="painter-count">8</b> painters</span>
+                <span id="painter-tail-label">Last 1% of pixels: <b id="painter-tail-share">–</b> of the work</span>
+              </p>
+              <p class="painter-note">A browser re-creation of the painting rules in JavaScript at 240&nbsp;×&nbsp;240, with one painter per logical core on your device. Drag along the chart to scrub.</p>
+            </div>
           </div>
-          <div class="pt-chart" id="pt-chart" role="slider" tabindex="0" aria-label="Playback position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <svg viewBox="0 0 600 100" preserveAspectRatio="none" aria-hidden="true"><path class="c-alt"/><path class="c-cur"/><line class="ph" x1="0" y1="-4" x2="0" y2="104"/></svg>
-            <span class="ax ax-y" aria-hidden="true">Canvas painted</span>
-            <span class="ax ax-k" aria-hidden="true"><span><i></i>Current</span><span><i class="alt"></i>Other rate</span></span>
-            <span class="ax ax-x" aria-hidden="true">Playback time</span>
+          <div class="feature-copy">
+            <h3 id="painter-heading">Concurrent canvas painter</h3>
+            <p class="feature-meta">Northeastern University, 2026</p>
+            <p>I explored CPU and memory bandwidth limits by adapting a multi-threaded random-painting assignment into a concurrent pipeline that streams canvas snapshots into video.</p>
+            <p>Painters fill most of the canvas quickly, then spend the rest of the run blocking and backtracking over the last white pixels.
+              A linear frame rate makes that early concurrent progress flash by, but demonstrates the bottleneck of a single thread filling the remaining pixels.
+              A non-linear render rate based on the percent painted creates a satisfying visual effect of consistent progress.</p>
+            <p>In prototyping, frames were written to disk, but I extended the project to stream frames straight into NVIDIA’s H.264 encoder through FFmpeg.</p>
+            <ul class="bullet-list">
+              <li>One painter thread per logical core, each running a randomized depth-first walk with a backtracking stack.</li>
+              <li>A grid of striped locks with trylock, so painters skip contested pixels instead of waiting on them.</li>
+              <li>A bounded frame queue drained by a dedicated writer thread.</li>
+            </ul>
           </div>
-          <div class="pt-ctl">
-            <button class="pill solid" id="pt-play" type="button">Play</button>
-            <fieldset class="seg" id="pt-rate">
-              <legend class="sr">Render rate</legend>
-              <input type="radio" name="rate" id="rate-lin" value="linear"><label for="rate-lin">Linear</label>
-              <input type="radio" name="rate" id="rate-nl" value="nonlinear" checked><label for="rate-nl">Non-linear</label>
-            </fieldset>
-            <button class="pill" id="pt-new" type="button">New run</button>
-          </div>
-          <p class="pt-read" aria-live="off">
-            <span>Frame <b id="r-frame">–</b></span>
-            <span><b id="r-pct">0%</b> painted</span>
-            <span><b id="r-k">8</b> painters</span>
-            <span id="r-tail-wrap">Last 1% of pixels: <b id="r-tail">–</b> of the work</span>
-          </p>
-          <p class="pt-note">A browser re-creation of the painting rules in JavaScript at 240&nbsp;×&nbsp;240, with one painter per logical core on your device. Drag along the chart to scrub.</p>
-        </div>
-        <div class="f-copy">
-          <h3 id="painter-h">Concurrent canvas painter</h3>
-          <p class="f-meta">Northeastern University, 2026</p>
-          <p>I explored CPU and memory bandwidth limits by adapting a multi-threaded random-painting assignment into a concurrent pipeline that streams canvas snapshots into video.</p>
-          <p>Painters fill most of the canvas quickly, then spend the rest of the run blocking and backtracking over the last white pixels.
-            A linear frame rate makes that early concurrent progress flash by, but demonstrates the bottleneck of a single thread filling the remaining pixels.
-            a non-linear render rate based on the percent painted creates a satisying visual effect of consistent progress.</p>
-          <p>In prototyping frames were writen to disk, but I extended the project to stream frames straight into NVIDIA’s H.264 encoder through FFmpeg.</p>
-          <ul class="dots">
-            <li>One painter thread per logical core, each running a randomized depth-first walk with a backtracking stack.</li>
-            <li>A grid of striped locks with trylock, so painters skip contested pixels instead of waiting on them.</li>
-            <li>A bounded frame queue drained by a dedicated writer thread.</li>
-          </ul>
-        </div>
-      </article>
+        </article>
+      </div>
 
 
     </div>
   </section>
 
   <!-- ========== Senior design ========== -->
-  <section class="sd" id="ppd" aria-labelledby="sd-h">
+  <section class="senior-design" id="senior-design" aria-labelledby="senior-design-heading">
     <div class="wrap">
-      <h2 class="work-h x" id="sd-h">Senior design</h2>
+      <h2 class="section-heading display-type" id="senior-design-heading">Senior design</h2>
     </div>
     <figure class="banner">
-      <img src="images/banner.webp" width="2400" height="719" alt="Our seven-person senior design team posing on a lawn at CU Boulder, with the Flatirons behind">
-      <figcaption class="cap">Team 8 at CU Boulder. <a href="https://www.colorado.edu/mechanical/team-08-launch-prevention-device-and-payload-protection-device" target="_blank" rel="noopener">See our project on CU Boulder’s site</a></figcaption>
+      <!-- Phones get the team photo on its own, uncropped. Wider screens get the full banner with the Flatirons. -->
+      <picture>
+        <source media="(max-width: 760px)" srcset="images/team-photo.webp" width="1200" height="766">
+        <img src="images/banner.webp" width="2400" height="719" alt="Our seven-person senior design team posing on a lawn at CU Boulder, with the Flatirons behind">
+      </picture>
+      <figcaption class="caption">Team 8 at CU Boulder. <a href="https://www.colorado.edu/mechanical/team-08-launch-prevention-device-and-payload-protection-device" target="_blank" rel="noopener">See our project page</a></figcaption>
     </figure>
     <div class="wrap">
-      <article class="feature ppd" aria-labelledby="ppd-h">
-        <div class="f-copy">
-          <h3 id="ppd-h">Payload protection device</h3>
-          <p class="f-meta">CU Boulder senior design for Sandia National Laboratories, 2020–2021</p>
+      <article class="feature payload" aria-labelledby="payload-heading">
+        <div class="feature-copy">
+          <h3 id="payload-heading">Payload protection device</h3>
+          <p class="feature-meta">CU Boulder senior design for Sandia National Laboratories, 2020–2021</p>
           <p>As lead CAD engineer, I led design and sensor integration for a device that rides in a model rocket’s nose cone, records its flight dynamics, and protects the data through extreme cold and hard landings.</p>
-          <ul class="dots">
+          <ul class="bullet-list">
             <li>Stacked TinyDuino sensor boards inside molded polyurethane impact foam and melamine thermal insulation.</li>
             <li>Characterized the foam on a universal testing machine and a drop tower, then used the stress-strain data for non-linear simulation in SolidWorks.</li>
             <li>Verified pressure, temperature, acceleration, and shock ranges in pressure chambers, a furnace, dry ice, and on a vibration table.</li>
             <li>Won Best Experimental Design and Validation from Sandia among six universities.</li>
           </ul>
           <div class="links">
-            <a class="pill" href="https://youtu.be/9VHwaHn5ahQ" target="_blank" rel="noopener"><span class="yt" aria-hidden="true"></span>Watch the drafting timelapse</a>
+            <a class="pill" href="https://youtu.be/9VHwaHn5ahQ" target="_blank" rel="noopener"><span class="play-icon" aria-hidden="true"></span>Watch the drafting timelapse</a>
             <a class="pill" href="https://drive.google.com/file/d/1MN3lQ5QCHVr4zkcsVoMs2PDdHFsRZaS-/view?usp=sharing" target="_blank" rel="noopener">Read the white paper</a>
           </div>
         </div>
-        <div class="ppd-media">
-          <figure class="tall"><img src="images/mts.webp" width="825" height="1100" alt="An MTS Exceed universal testing machine next to its control computer"><figcaption class="cap">MTS load frame used for the foam tests</figcaption></figure>
-          <figure class="sq"><img src="images/stack.webp" width="839" height="1000" alt="Stacked sensor boards between two white plastic plates"><figcaption class="cap">Sensor assembly</figcaption></figure>
-          <figure class="fill"><video src="images/foam-drop.mp4" poster="images/foam-drop-poster.webp" width="720" height="480" muted loop playsinline controls preload="metadata" data-autoplay aria-label="Drop tower test: a steel plate falls onto a foam disk, compresses it, and rebounds"></video><figcaption class="cap">Drop tower impact test</figcaption></figure>
+        <div class="payload-media">
+          <figure class="tall"><img src="images/mts.webp" width="825" height="1100" alt="An MTS Exceed universal testing machine next to its control computer"><figcaption class="caption">MTS load frame used for the foam tests</figcaption></figure>
+          <figure class="square"><img src="images/stack.webp" width="839" height="1000" alt="Stacked sensor boards between two white plastic plates"><figcaption class="caption">Sensor assembly</figcaption></figure>
+          <figure class="fill-height"><video src="images/foam-drop.mp4" poster="images/foam-drop-poster.webp" width="720" height="480" muted loop playsinline controls preload="metadata" data-autoplay aria-label="Drop tower test: a steel plate falls onto a foam disk, compresses it, and rebounds"></video><figcaption class="caption">Drop tower impact test</figcaption></figure>
         </div>
       </article>
     </div>
   </section>
 
-  <!-- ========== My current build: zooming photo with part points (.hs) ========== -->
-  <section class="reveal" id="off" aria-labelledby="build-h">
+  <!-- ========== My current build: zooming photo with part points (.hotspot) ========== -->
+  <section class="build-photo" id="off-the-clock" aria-labelledby="build-photo-heading">
     <div class="stage">
       <div class="frame">
         <div class="cover">
           <img src="images/room.webp" width="2200" height="1650" alt="A white liquid-cooled PC glowing lavender on a stand by a sunny window, next to a desk and monitor">
-          <div class="hs" style="left:36.8%;top:55.5%;--k:1"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-1" aria-label="NZXT N7 B550"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-1"><b>NZXT N7 B550</b><span>ATX AM4 motherboard</span><span class="tip-links"><a href="https://support.nzxt.com/hc/en-us/articles/37547153004827-N7-B550-Specs" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:41.5%;top:54.5%;--k:2"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-2" aria-label="Thermaltake Pacific MX2 Ultra"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-2"><b>Thermaltake Pacific MX2 Ultra</b><span>CPU block on a Ryzen 9 5900X. Its 2.1-inch screen displays coolant temperature.</span><span class="tip-links"><a href="https://www.thermaltakeusa.com/pacific-mx2-ultra-cpu-waterblock.html" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:45.6%;top:51.5%;--k:3"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-3" aria-label="Corsair Vengeance RGB Pro SL"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-3"><b>Corsair Vengeance RGB Pro SL</b><span>64 GB DDR4-3600 CL18, two 2 × 16 GB kits</span><span class="tip-links"><a href="https://www.corsair.com/us/en/p/memory/cmh32gx4m2d3600c18w/vengeance-rgb-pro-sl-32gb-2x16gb-ddr4-dram-3600mhz-c18-memory-kit-a-white-cmh32gx4m2d3600c18w" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:49%;top:57.5%;--k:4"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-4" aria-label="Lian Li O11DE-2W upright GPU kit"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-4"><b>Lian Li O11DE-2W upright GPU kit</b><span>PCIe 4.0 riser that stands the GPU beside the motherboard</span><span class="tip-links"><a href="https://lian-li.com/product/o11de-2/" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:52.6%;top:51%;--k:5"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-5" aria-label="EVGA RTX 3080 Ti FTW3 Ultra"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-5"><b>EVGA RTX 3080 Ti FTW3 Ultra</b><span>Under a Bykski N-EV3090FTW3-X full-cover water block</span><span class="tip-links"><a href="https://www.techpowerup.com/gpu-specs/evga-rtx-3080-ftw3-ultra.b9411" target="_blank" rel="noopener">Card specs</a><a href="https://bykski.us/products/bykski-full-coverage-gpu-water-block-and-backplate-for-evga-rtx-3090-3080-ftw3-ultra-gaming-n-ev3090ftw3-x" target="_blank" rel="noopener">Water block</a></span></div></div>
-          <div class="hs" style="left:53.6%;top:59%;--k:6"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-6" aria-label="Corsair Hydro X XD5 RGB"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-6"><b>Corsair Hydro X XD5 RGB</b><span>D5 pump with a 330 ml reservoir</span><span class="tip-links"><a href="https://www.corsair.com/us/en/p/custom-liquid-cooling/cx-9040004-ww/hydro-x-series-xd5-rgb-pump-reservoir-combo-aca-a-white-cx-9040004-ww?srsltid=AU7gw4VPNJGGqM2F7AvxfnAPSGfZ03z3UO7NBiJhR3o7OqZmNHeMAokv" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:61%;top:42.5%;--k:0"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-0" aria-label="Lian Li O11 Dynamic EVO"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-0"><b>Lian Li O11 Dynamic EVO</b><span>Dual-chamber mid tower case</span><span class="tip-links"><a href="https://lian-li.com/product/o11-dynamic-evo/" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:47%;top:43%;--k:7"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-7" aria-label="Hydro X Series XR5 360mm Radiator"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-7"><b>Hydro X Series XR5 360mm Radiator</b><span>Hot Air Exhaust</span><span class="tip-links"><a href="https://www.corsair.com/p/custom-liquid-cooling/cx-9040008-ww/hydro-x-series-xr5-360mm-radiator-aca-a-white-cx-9040008-ww" target="_blank" rel="noopener">View specs</a></span></div></div>
-          <div class="hs" style="left:49%;top:75%;--k:8"><button class="hs-dot" type="button" aria-expanded="false" aria-controls="hs-8" aria-label="Hydro X Series XR5 360mm Radiator"><span class="dot" aria-hidden="true"></span></button><div class="tip" id="hs-8"><b>Hydro X Series XR5 360mm Radiator</b><span>Cold Air Intake</span><span class="tip-links"><a href="https://www.corsair.com/p/custom-liquid-cooling/cx-9040008-ww/hydro-x-series-xr5-360mm-radiator-aca-a-white-cx-9040008-ww" target="_blank" rel="noopener">View specs</a></span></div></div>
+          <div class="hotspot" style="left: 36.8%; top: 55.5%; --hotspot-index: 1">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-1" aria-label="NZXT N7 B550">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-1">
+              <b>NZXT N7 B550</b>
+              <span>ATX AM4 motherboard</span>
+              <span class="hotspot-links">
+                <a href="https://support.nzxt.com/hc/en-us/articles/37547153004827-N7-B550-Specs" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 41.5%; top: 54.5%; --hotspot-index: 2">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-2" aria-label="Thermaltake Pacific MX2 Ultra">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-2">
+              <b>Thermaltake Pacific MX2 Ultra</b>
+              <span>CPU block on a Ryzen 9 5900X. Its 2.1-inch screen displays coolant temperature.</span>
+              <span class="hotspot-links">
+                <a href="https://www.thermaltakeusa.com/pacific-mx2-ultra-cpu-waterblock.html" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 45.6%; top: 51.5%; --hotspot-index: 3">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-3" aria-label="Corsair Vengeance RGB Pro SL">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-3">
+              <b>Corsair Vengeance RGB Pro SL</b>
+              <span>64 GB DDR4-3600 CL18, two 2 × 16 GB kits</span>
+              <span class="hotspot-links">
+                <a href="https://www.corsair.com/us/en/p/memory/cmh32gx4m2d3600c18w/vengeance-rgb-pro-sl-32gb-2x16gb-ddr4-dram-3600mhz-c18-memory-kit-a-white-cmh32gx4m2d3600c18w" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 49%; top: 57.5%; --hotspot-index: 4">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-4" aria-label="Lian Li O11DE-2W upright GPU kit">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-4">
+              <b>Lian Li O11DE-2W upright GPU kit</b>
+              <span>PCIe 4.0 riser that stands the GPU beside the motherboard</span>
+              <span class="hotspot-links">
+                <a href="https://lian-li.com/product/o11de-2/" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 52.6%; top: 51%; --hotspot-index: 5">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-5" aria-label="EVGA RTX 3080 Ti FTW3 Ultra">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-5">
+              <b>EVGA RTX 3080 Ti FTW3 Ultra</b>
+              <span>Under a Bykski N-EV3090FTW3-X full-cover water block</span>
+              <span class="hotspot-links">
+                <a href="https://www.techpowerup.com/gpu-specs/evga-rtx-3080-ftw3-ultra.b9411" target="_blank" rel="noopener">Card specs</a>
+                <a href="https://bykski.us/products/bykski-full-coverage-gpu-water-block-and-backplate-for-evga-rtx-3090-3080-ftw3-ultra-gaming-n-ev3090ftw3-x" target="_blank" rel="noopener">Water block</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 53.6%; top: 59%; --hotspot-index: 6">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-6" aria-label="Corsair Hydro X XD5 RGB">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-6">
+              <b>Corsair Hydro X XD5 RGB</b>
+              <span>D5 pump with a 330 ml reservoir</span>
+              <span class="hotspot-links">
+                <a href="https://www.corsair.com/us/en/p/custom-liquid-cooling/cx-9040004-ww/hydro-x-series-xd5-rgb-pump-reservoir-combo-aca-a-white-cx-9040004-ww?srsltid=AU7gw4VPNJGGqM2F7AvxfnAPSGfZ03z3UO7NBiJhR3o7OqZmNHeMAokv" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 61%; top: 42.5%; --hotspot-index: 0">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-0" aria-label="Lian Li O11 Dynamic EVO">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-0">
+              <b>Lian Li O11 Dynamic EVO</b>
+              <span>Dual-chamber mid tower case</span>
+              <span class="hotspot-links">
+                <a href="https://lian-li.com/product/o11-dynamic-evo/" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 47%; top: 43%; --hotspot-index: 7">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-7" aria-label="Hydro X Series XR5 360mm Radiator">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-7">
+              <b>Hydro X Series XR5 360mm Radiator</b>
+              <span>Hot Air Exhaust</span>
+              <span class="hotspot-links">
+                <a href="https://www.corsair.com/p/custom-liquid-cooling/cx-9040008-ww/hydro-x-series-xr5-360mm-radiator-aca-a-white-cx-9040008-ww" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
+          <div class="hotspot" style="left: 49%; top: 75%; --hotspot-index: 8">
+            <button class="hotspot-button" type="button" aria-expanded="false" aria-controls="hotspot-card-8" aria-label="Hydro X Series XR5 360mm Radiator">
+              <span class="hotspot-marker" aria-hidden="true"></span>
+            </button>
+            <div class="hotspot-card" id="hotspot-card-8">
+              <b>Hydro X Series XR5 360mm Radiator</b>
+              <span>Cold Air Intake</span>
+              <span class="hotspot-links">
+                <a href="https://www.corsair.com/p/custom-liquid-cooling/cx-9040008-ww/hydro-x-series-xr5-360mm-radiator-aca-a-white-cx-9040008-ww" target="_blank" rel="noopener">View specs</a>
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="frame-cap">
-          <h2 id="build-h">My current build</h2>
-          <p><span class="h-hover">Hover a part to see what it is and open its specs.</span><span class="h-touch">Tap a part to see what it is and open its specs.</span> <a href="#builds" style="color:#fff">More builds</a></p>
-          <p class="cue" aria-hidden="true">Scroll <i></i></p>
+        <div class="frame-caption">
+          <h2 id="build-photo-heading">My current build</h2>
+          <p><span class="hint-hover">Hover a part to see what it is and open its specs.</span><span class="hint-touch">Tap a part to see what it is and open its specs.</span> <a class="frame-caption-link" href="#builds">More builds</a></p>
+          <p class="cue" aria-hidden="true">Scroll <span class="cue-line"></span></p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ========== Off the clock: build cards (each opens a <template> below) ========== -->
-  <section class="off" id="builds" aria-labelledby="off-h">
+  <section class="builds" id="builds" aria-labelledby="builds-heading">
     <div class="wrap">
-      <div class="off-head">
-        <h2 class="x" id="off-h">Off the<br>clock</h2>
+      <div class="builds-header">
+        <h2 class="display-type" id="builds-heading">Off the<br>clock</h2>
         <p>In my “tinker time,” I model small componentry, build custom liquid-cooled PCs for young professionals, and help my roommate’s band with audio engineering.</p>
       </div>
       <div class="cards">
-        <button class="card" type="button" data-d="d-pc" aria-haspopup="dialog">
-          <span class="c-img"><img class="a" src="images/pc_old.webp" width="908" height="1210" alt=""><img class="b" src="images/pc_first.webp" width="750" height="1000" alt=""></span>
-          <span class="c-t">Liquid-cooled PCs</span>
-          <span class="c-m">Bent tubing, printed brackets, tuned overclocks</span>
-          <span class="c-go">Open details</span>
+        <button class="card" type="button" data-drawer="drawer-pc" aria-haspopup="dialog">
+          <span class="card-image">
+            <img class="photo-default" src="images/pc_old.webp" width="908" height="1210" alt="">
+            <img class="photo-hover" src="images/pc_first.webp" width="750" height="1000" alt="">
+          </span>
+          <span class="card-title">Liquid-cooled PCs</span>
+          <span class="card-summary">Bent tubing, printed brackets, tuned overclocks</span>
+          <span class="card-action">Open details</span>
         </button>
-        <button class="card" type="button" data-d="d-winch" aria-haspopup="dialog">
-          <span class="c-img"><img class="a" src="images/w_final.webp" width="846" height="720" alt=""><img class="b" src="images/w_weld.webp" width="1200" height="675" alt=""></span>
-          <span class="c-t">Ski winch and go-kart</span>
-          <span class="c-m">Two builds, one drivetrain</span>
-          <span class="c-go">Open details</span>
+        <button class="card" type="button" data-drawer="drawer-winch" aria-haspopup="dialog">
+          <span class="card-image">
+            <img class="photo-default" src="images/w_final.webp" width="846" height="720" alt="">
+            <img class="photo-hover" src="images/w_weld.webp" width="1200" height="675" alt="">
+          </span>
+          <span class="card-title">Ski winch and go-kart</span>
+          <span class="card-summary">Two builds, one drivetrain</span>
+          <span class="card-action">Open details</span>
         </button>
       </div>
     </div>
   </section>
 
   <!-- ========== Toolkit ticker ========== -->
-  <section class="kit" aria-labelledby="kit-h">
-    <h2 class="kit-h" id="kit-h">My Toolkit</h2>
-    <div class="mq-row" data-dir="-1"><ul class="mq-track"><li>C</li><li>C++</li><li>Python</li><li>MATLAB</li><li>Bash</li><li>FFmpeg</li><li>GitLab CI/CD</li><li>Jenkins</li><li>Wireshark</li><li>IBM DOORS</li></ul></div>
-    <div class="mq-row" data-dir="1"><ul class="mq-track"><li>SolidWorks</li><li>PTC Creo</li><li>Simulink</li><li>GD&amp;T</li><li>RF measurement</li><li>3D printing</li><li>Mill and lathe</li><li>Soldering</li></ul></div>
+  <section class="toolkit" aria-labelledby="toolkit-heading">
+    <h2 class="toolkit-heading" id="toolkit-heading">My Toolkit</h2>
+    <div class="ticker-row" data-direction="-1">
+      <ul class="ticker-track">
+        <li>C</li>
+        <li>C++</li>
+        <li>Python</li>
+        <li>MATLAB</li>
+        <li>Bash</li>
+        <li>FFmpeg</li>
+        <li>GitLab CI/CD</li>
+        <li>Jenkins</li>
+        <li>Wireshark</li>
+        <li>IBM DOORS</li>
+      </ul>
+    </div>
+    <div class="ticker-row" data-direction="1">
+      <ul class="ticker-track">
+        <li>SolidWorks</li>
+        <li>PTC Creo</li>
+        <li>Simulink</li>
+        <li>GD&amp;T</li>
+        <li>RF measurement</li>
+        <li>3D printing</li>
+        <li>Mill and lathe</li>
+        <li>Soldering</li>
+      </ul>
+    </div>
   </section>
 </main>
 
 <!-- ========== Contact ========== -->
-<footer class="contact" id="contact" aria-labelledby="contact-h">
+<footer class="contact" id="contact" aria-labelledby="contact-heading">
   <div class="wrap">
-    <h2 class="x" id="contact-h">Get in<br>touch</h2>
-    <p class="lead">I’m always glad to talk about test systems, embedded software, or someone’s next PC build.</p>
-    <a class="mail" href="mailto:peterngeis@gmail.com">peterngeis@gmail.com</a>
-    <div class="row">
-      <a class="pill solid" href="https://www.linkedin.com/in/peterngeis/" target="_blank" rel="noopener">LinkedIn</a>
+    <h2 class="display-type" id="contact-heading">Get in<br>touch</h2>
+    <p class="contact-intro">I’m always glad to talk about test systems, embedded software, or someone’s next PC build.</p>
+    <a class="email-link" href="mailto:peterngeis@gmail.com">peterngeis@gmail.com</a>
+    <div class="contact-buttons">
+      <a class="pill filled" href="https://www.linkedin.com/in/peterngeis/" target="_blank" rel="noopener">LinkedIn</a>
       <a class="pill" href="https://drive.google.com/file/d/1tQSf-gUoQpiIY4QyLF8mrFGBRCmsN-kr/view?usp=sharing" target="_blank" rel="noopener">View résumé</a>
     </div>
-    <div class="foot"><span>© 2026 Peter Geis</span><span>Set in <a href="https://www.fontshare.com/fonts/epilogue" target="_blank" rel="noopener">Epilogue</a></span></div>
+    <div class="footer-credits"><span>© 2026 Peter Geis</span><span>Set in <a href="https://www.fontshare.com/fonts/epilogue" target="_blank" rel="noopener">Epilogue</a></span></div>
   </div>
 </footer>
 
 <!-- ========== Drawer shell and its contents (one <template> per build card) ========== -->
-<dialog class="drawer" id="drawer" aria-labelledby="dr-title">
-  <div class="dr-in">
-    <button class="pill dr-x" type="button" id="dr-close">Close</button>
-    <div class="dr-body" id="dr-body"></div>
+<dialog class="drawer" id="drawer" aria-labelledby="drawer-title">
+  <div class="drawer-scroll-area">
+    <button class="pill drawer-close-button" type="button" id="drawer-close">Close</button>
+    <div class="drawer-body" id="drawer-body"></div>
   </div>
 </dialog>
 
-<template id="d-pc">
-  <h3 class="x" id="dr-title">Liquid-cooled PCs</h3>
-  <p class="f-meta">Personal projects</p>
+<template id="drawer-pc">
+  <h3 class="display-type" id="drawer-title">Liquid-cooled PCs</h3>
+  <p class="feature-meta">Personal projects</p>
   <p>My current build runs a Ryzen 9 5900X and an EVGA RTX 3080 Ti with a custom liquid cooling loop in a Lian Li O11 Dynamic EVO. My builds integrate hardware from several manufacturers, and I enjoy the artistic aspects of hand-bent PMMA tubing and 3D-printed brackets. To tune CPU, GPU, and memory overclocking curves, I used AMD Ryzen Master and EVGA Precision X1 while simulating machine learning and CAD workloads.</p>
   <p>I also help engineers, designers, and computer scientists troubleshoot and assemble their own builds.</p>
   <div class="links">
     <a class="pill" href="https://pcpartpicker.com/b/68HzK8" target="_blank" rel="noopener">Full parts list on PCPartPicker</a>
-    <a class="pill" href="https://www.youtube.com/shorts/RhgdRbpLL8Y" target="_blank" rel="noopener"><span class="yt" aria-hidden="true"></span>Watch the boot sequence</a>
+    <a class="pill" href="https://www.youtube.com/shorts/RhgdRbpLL8Y" target="_blank" rel="noopener"><span class="play-icon" aria-hidden="true"></span>Watch the boot sequence</a>
   </div>
-  <div class="dr-shots">
-    <figure class="wide"><img src="images/pc_gpu.webp" width="1000" height="750" alt="A bare graphics card with thermal pads, next to an open white case"><figcaption class="cap">Preparing the GPU for its water block</figcaption></figure>
-    <figure><img src="images/bends.webp" width="750" height="1000" alt="Clear prototype tube bends"><figcaption class="cap">Prototype PMMA bends</figcaption></figure>
-    <figure><img src="images/pc_bracket.webp" width="473" height="1000" alt="A 3D printer printing a perforated white bracket"><figcaption class="cap">Printing the drain valve bracket</figcaption></figure>
+  <div class="drawer-photos">
+    <figure class="wide"><img src="images/pc_gpu.webp" width="1000" height="750" alt="A bare graphics card with thermal pads, next to an open white case"><figcaption class="caption">Preparing the GPU for its water block</figcaption></figure>
+    <figure><img src="images/bends.webp" width="750" height="1000" alt="Clear prototype tube bends"><figcaption class="caption">Prototype PMMA bends</figcaption></figure>
+    <figure><img src="images/pc_bracket.webp" width="473" height="1000" alt="A 3D printer printing a perforated white bracket"><figcaption class="caption">Printing the drain valve bracket</figcaption></figure>
   </div>
 </template>
 
-<template id="d-winch">
-  <h3 class="x" id="dr-title">Ski winch and go-kart</h3>
-  <p class="f-meta">Personal projects</p>
+<template id="drawer-winch">
+  <h3 class="display-type" id="drawer-title">Ski winch and go-kart</h3>
+  <p class="feature-meta">Personal projects</p>
   <p>A gas-powered winch for towing skiers and snowboarders into jumps. It pulls a 180 lb rider past 40 mph using a 6 HP engine, a variable torque converter, a bail brake, and a high-strength steel frame from recycled material.</p>
-  <p>A local skate shop, THURO, rented it for ski, snowboard, and skateboard video shoots. I later built a go-kart around the same drivetrain with recyced fence posts!</p>
+  <p>A local skate shop, THURO, rented it for ski, snowboard, and skateboard video shoots. I later built a go-kart around the same drivetrain with recycled fence posts!</p>
   <div class="links">
-    <a class="pill" href="https://youtu.be/4q1-7wVSeSw" target="_blank" rel="noopener"><span class="yt" aria-hidden="true"></span>Watch the first winch test</a>
-    <a class="pill" href="https://youtu.be/ZdVi2zazLHs?t=27" target="_blank" rel="noopener"><span class="yt" aria-hidden="true"></span>Watch the Pumpkin Pie Slide Jam</a>
-    <a class="pill" href="https://www.youtube.com/watch?v=3_H4XHzEYOA" target="_blank" rel="noopener"><span class="yt" aria-hidden="true"></span>Watch the go-kart run</a>
+    <a class="pill" href="https://youtu.be/4q1-7wVSeSw" target="_blank" rel="noopener"><span class="play-icon" aria-hidden="true"></span>Watch the first winch test</a>
+    <a class="pill" href="https://youtu.be/ZdVi2zazLHs?t=27" target="_blank" rel="noopener"><span class="play-icon" aria-hidden="true"></span>Watch the Pumpkin Pie Slide Jam</a>
+    <a class="pill" href="https://www.youtube.com/watch?v=3_H4XHzEYOA" target="_blank" rel="noopener"><span class="play-icon" aria-hidden="true"></span>Watch the go-kart run</a>
   </div>
-  <div class="dr-shots">
-    <figure class="wide"><img src="images/w_weld.webp" width="1200" height="675" alt="Welding a steel tube frame in a shop"><figcaption class="cap">Welding the frame</figcaption></figure>
-    <figure><img src="images/snow.webp" width="574" height="366" alt="The winch in deep snow"><figcaption class="cap">First test</figcaption></figure>
-    <figure><img src="images/w_front.webp" width="614" height="841" alt="Front view of the finished winch with tow straps"><figcaption class="cap">Final assembly</figcaption></figure>
+  <div class="drawer-photos">
+    <figure class="wide"><img src="images/w_weld.webp" width="1200" height="675" alt="Welding a steel tube frame in a shop"><figcaption class="caption">Welding the frame</figcaption></figure>
+    <figure><img src="images/snow.webp" width="574" height="366" alt="The winch in deep snow"><figcaption class="caption">First test</figcaption></figure>
+    <figure><img src="images/w_front.webp" width="614" height="841" alt="Front view of the finished winch with tow straps"><figcaption class="caption">Final assembly</figcaption></figure>
   </div>
 </template>
 
-<!-- Scripts. core.js must load first; the rest register with it and measure in this order.
-     scroll-effects.js comes before build-photo.js because the Field photos strip sets its own
-     height, which moves everything below it, including the build photo. -->
+<!-- Scripts. core.js must load first; the rest register with it. Layout steps run in priority order
+     (photo sizing, then scroll pauses, then everything that reads positions), so the order below only
+     matters between scripts of equal priority: field-photos.js comes before build-photo.js because the
+     field photos strip sets its own height, which moves everything below it. -->
 <script src="js/core.js" defer></script>
+<script src="js/scroll-pause.js" defer></script>
 <script src="js/hero.js" defer></script>
-<script src="js/scroll-effects.js" defer></script>
+<script src="js/statement.js" defer></script>
+<script src="js/field-photos.js" defer></script>
+<script src="js/experience.js" defer></script>
 <script src="js/build-photo.js" defer></script>
+<script src="js/toolkit.js" defer></script>
+<script src="js/nav.js" defer></script>
 <script src="js/drawer.js" defer></script>
 <script src="js/video.js" defer></script>
 <script src="js/painter.js" defer></script>

@@ -1,34 +1,39 @@
 /*
  * drawer.js
  * The slide-in panel that opens from the "Off the clock" build cards.
- * Each card's data-d attribute names a <template> in index.html; its contents fill the drawer.
+ * Each card's data-drawer attribute names a <template> in index.html; its contents fill the drawer.
  */
 (function () {
   "use strict";
-  var doc = document.documentElement;
-  var dlg = document.getElementById("drawer"), body = document.getElementById("dr-body");
 
-  Array.prototype.slice.call(document.querySelectorAll(".card")).forEach(function (card) {
-    card.addEventListener("click", function () {
-      var tpl = document.getElementById(card.getAttribute("data-d"));
-      body.replaceChildren(tpl.content.cloneNode(true));
-      if (typeof dlg.showModal === "function") {
-        dlg.showModal();
+  const root = document.documentElement;
+  const drawer = document.getElementById("drawer");
+  const drawerBody = document.getElementById("drawer-body");
+
+  Array.from(document.querySelectorAll(".card")).forEach((card) => {
+    card.addEventListener("click", () => {
+      const template = document.getElementById(card.getAttribute("data-drawer"));
+      drawerBody.replaceChildren(template.content.cloneNode(true));
+      if (typeof drawer.showModal === "function") {
+        drawer.showModal();
       } else {
-        dlg.setAttribute("open", "");
+        drawer.setAttribute("open", "");
       }
-      doc.classList.add("locked");   // stop the page behind from scrolling
-      dlg.querySelector(".dr-in").scrollTop = 0;
+      root.classList.add("is-scroll-locked");   // stop the page behind from scrolling
+      drawer.querySelector(".drawer-scroll-area").scrollTop = 0;
     });
   });
 
-  document.getElementById("dr-close").addEventListener("click", function () { dlg.close(); });
-  dlg.addEventListener("close", function () { doc.classList.remove("locked"); });
+  document.getElementById("drawer-close").addEventListener("click", () => { drawer.close(); });
+  drawer.addEventListener("close", () => { root.classList.remove("is-scroll-locked"); });
+
   // Clicking the dimmed backdrop closes it.
-  dlg.addEventListener("click", function (e) {
-    var r = dlg.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
-      dlg.close();
+  drawer.addEventListener("click", (event) => {
+    const drawerBox = drawer.getBoundingClientRect();
+    const clickedOutside = event.clientX < drawerBox.left || event.clientX > drawerBox.right
+      || event.clientY < drawerBox.top || event.clientY > drawerBox.bottom;
+    if (clickedOutside) {
+      drawer.close();
     }
   });
 })();

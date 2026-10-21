@@ -1,78 +1,356 @@
 /*
  * hero.css
- * The loader, the giant name, the ASCII radar, its beams, and the lavender cursor reveal.
+ * The landing screen: the loader, the giant name, the ASCII radar and its beams, and the lavender cursor reveal.
+ * Script: js/hero.js
  */
 
-/* ============ Loader ============ */
-.loader { display: none; }
-html.motion:not(.booted) .loader {
-  display: grid; position: fixed; inset: 0; z-index: 100;
-  background: var(--slate); color: var(--on-slate);
-  grid-template-rows: auto 1fr auto; padding: calc(env(safe-area-inset-top, 0px) + 24px) var(--g) calc(env(safe-area-inset-bottom, 0px) + 28px);
+.loader {
+  display: none;
+}
+
+html.motion-enabled:not(.loader-seen) .loader {
+  display: grid;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--slate);
+  color: var(--on-slate);
+  grid-template-rows: auto 1fr auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 24px) var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 28px);
   animation: loader-out 0.9s cubic-bezier(0.7, 0, 0.2, 1) 1.55s forwards;
   cursor: pointer;
 }
-@keyframes loader-out { to { transform: translateY(-100%); visibility: hidden; } }
-.ld-top { display: flex; justify-content: space-between; font-size: 15px; color: var(--on-slate-muted); }
-.ld-top b { color: var(--on-slate); font-weight: 600; }
-.ld-temp { align-self: center; justify-self: center; display: flex; align-items: flex-start; gap: 0.12em; font-size: clamp(110px, 24vw, 300px); font-weight: 800; line-height: 0.8; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
-.ld-unit { font-size: 0.16em; line-height: 1.05; letter-spacing: 0; font-weight: 600; padding-top: 0.25em; color: var(--lav); }
-.ld-bar { height: 3px; background: var(--ld-track); border-radius: 3px; overflow: hidden; }
-.ld-bar i { display: block; height: 100%; background: var(--lav); transform-origin: left; animation: fill 1.4s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
-@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* ============ Hero ============ */
-.hero {
-  position: relative; overflow: hidden;
-  min-height: 100vh; min-height: 100svh;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: calc(var(--nav-h) + 6vh) var(--g) clamp(24px, 4vh, 44px);
+@keyframes loader-out {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
 }
-.giant { color: var(--ink); font-size: 17vw; margin: 0 0 clamp(20px, 4vh, 40px) -0.045em; }
-.gl { display: block; overflow: hidden; line-height: 1; padding: 0.06em 0 0.16em; }
-.gl2 { text-align: right; margin-top: -0.3em; }
-.gi { display: inline-block; white-space: nowrap; }
-.ch { display: inline-block; }
-html.motion .ch { animation: rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(1.85s + var(--i) * 55ms); }
-html.motion.booted .ch { animation-delay: calc(0.1s + var(--i) * 55ms); }
-@keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
-.hero-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; font-size: 15px; line-height: 1.45; color: var(--muted); border-top: 1.5px solid var(--ink); padding-top: 16px; }
-.hero-meta b { color: var(--ink); font-weight: 600; }
-.cue { justify-self: end; display: flex; align-items: center; gap: 12px; color: var(--ink); font-weight: 500; }
-.cue i { display: block; width: 1.5px; height: 34px; background: var(--ink); transform-origin: top; }
-html.motion .cue i { animation: cue 1.8s ease-in-out infinite; }
-@keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+.loader-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: var(--on-slate-muted);
+}
+
+.loader-header b {
+  color: var(--on-slate);
+  font-weight: 600;
+}
+
+.loader-temperature {
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.12em;
+  font-size: clamp(110px, 24vw, 300px);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.loader-unit {
+  font-size: 0.16em;
+  line-height: 1.05;
+  letter-spacing: 0;
+  font-weight: 600;
+  padding-top: 0.25em;
+  color: var(--lavender);
+}
+
+.loader-bar {
+  height: 3px;
+  background: var(--loader-track);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.loader-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--lavender);
+  transform-origin: left;
+  animation: loader-fill 1.4s cubic-bezier(0.3, 0.6, 0.2, 1) both;
+}
+
+@keyframes loader-fill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: calc(var(--nav-height) + 6vh) var(--gutter) clamp(24px, 4vh, 44px);
+}
+
+.hero-name {
+  color: var(--ink);
+  font-size: 17vw;
+  margin: 0 0 clamp(20px, 4vh, 40px) -0.045em;
+}
+
+.name-line {
+  display: block;
+  overflow: hidden;
+  line-height: 1;
+  padding: 0.06em 0 0.16em;
+}
+
+.name-line-second {
+  text-align: right;
+  margin-top: -0.3em;
+}
+
+.name-line-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.name-letter {
+  display: inline-block;
+}
+
+html.motion-enabled .name-letter {
+  animation: letter-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(1.85s + var(--letter-index) * 55ms);
+}
+
+html.motion-enabled.loader-seen .name-letter {
+  animation-delay: calc(0.1s + var(--letter-index) * 55ms);
+}
+
+@keyframes letter-rise {
+  from {
+    transform: translateY(105%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+.hero-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+  border-top: 1.5px solid var(--ink);
+  padding-top: 16px;
+}
+
+.hero-meta b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cue {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.cue-line {
+  display: block;
+  width: 1.5px;
+  height: 34px;
+  background: var(--ink);
+  transform-origin: top;
+}
+
+html.motion-enabled .cue-line {
+  animation: cue-line-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes cue-line-pulse {
+  0% {
+    transform: scaleY(0);
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  51% {
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
 
 /* hero interaction: cursor reveal + radar */
-.hero > .giant, .hero > .hero-meta { position: relative; z-index: 1; }
-.hero-x {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: inherit; clip-path: circle(0px at 50% 50%);
+.hero > .hero-name,
+.hero > .hero-meta {
+  position: relative;
+  z-index: 1;
 }
-.hero-x .giant { position: relative; color: var(--lav); }
-.hero-x .hero-meta { visibility: hidden; }
-.hero-x .ch { animation: none !important; }
+
+.hero-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: inherit;
+  clip-path: circle(0px at 50% 50%);
+}
+
+.hero-reveal .hero-name {
+  position: relative;
+  color: var(--lavender);
+}
+
+.hero-reveal .hero-meta {
+  visibility: hidden;
+}
+
+.hero-reveal .name-letter {
+  animation: none !important;
+}
+
 .radar {
-  position: absolute; z-index: 3; left: var(--g); top: 0; pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  left: var(--gutter);
+  top: 0;
+  pointer-events: none;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: clamp(7.5px, 0.7vw, 12px); line-height: 1.14; color: var(--ink); white-space: pre; opacity: 0; width: 56ch;
+  font-size: clamp(7.5px, 0.7vw, 12px);
+  line-height: 1.14;
+  color: var(--ink);
+  white-space: pre;
+  opacity: 0;
+  width: 56ch;
 }
-.radar.placed { opacity: 1; transition: opacity 0.6s ease; }
-.hero.radar-stacked .radar { position: relative; left: auto; top: auto; margin-bottom: 14px; }
-.hx-spacer { flex: none; }
-.radar-art { display: block; width: 56ch; }
-.radar-note { display: block; margin-top: 1em; color: var(--muted); font-family: var(--f); font-size: max(8px, 1.05em); white-space: nowrap; }
-.radar-read { display: block; color: var(--lav); margin-bottom: 0.8em; font-variant-numeric: tabular-nums; }
-.beam { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.beam .path { stroke: var(--lav); stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.22; }
-.beam .p-out { stroke: var(--lav); stroke-width: 3; stroke-linecap: round; }
-.beam .p-back { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; opacity: 0.9; }
+
+.radar.is-placed {
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.hero.has-radar-in-flow .radar {
+  position: relative;
+  left: auto;
+  top: auto;
+  margin-bottom: 14px;
+}
+
+.hero-reveal-spacer {
+  flex: none;
+}
+
+.radar-art {
+  display: block;
+  width: 56ch;
+}
+
+.radar-note {
+  display: block;
+  margin-top: 1em;
+  color: var(--muted);
+  font-family: var(--font-family);
+  font-size: max(8px, 1.05em);
+  white-space: nowrap;
+}
+
+.radar-readout {
+  display: block;
+  color: var(--lavender);
+  margin-bottom: 0.8em;
+  font-variant-numeric: tabular-nums;
+}
+
+.radar-beams {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.radar-beams .beam-track {
+  stroke: var(--lavender);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.22;
+}
+
+.radar-beams .beam-pulse-out {
+  stroke: var(--lavender);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.radar-beams .beam-pulse-return {
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+
 /* difference blend: lavender over the lavender letters (and white over the white ones) cancels to black */
-.beam-x { mix-blend-mode: difference; color: var(--lav); }
-.beam-x.scan { color: #FFFFFF; }
-.beam-x .ret { fill: none; stroke: currentColor; stroke-width: 1.5; }
-.beam-x .ping { fill: none; stroke: currentColor; stroke-width: 1.5; opacity: 0; }
-.beam-x .tlabel { fill: currentColor; font: 600 11px ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.04em; }
-html:not(.js) .hero-x, html:not(.js) .beam, html:not(.js) .radar { display: none; }
-.beam.idle, .beam-x.idle { opacity: 0; }
+.radar-target-layer {
+  mix-blend-mode: difference;
+  color: var(--lavender);
+}
+
+.radar-target-layer.is-scanning {
+  color: #FFFFFF;
+}
+
+.radar-target-layer .target-reticle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.radar-target-layer .target-ping {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  opacity: 0;
+}
+
+.radar-target-layer .target-label {
+  fill: currentColor;
+  font: 600 11px ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+
+html:not(.has-javascript) .hero-reveal,
+html:not(.has-javascript) .radar-beams,
+html:not(.has-javascript) .radar {
+  display: none;
+}
+
+.radar-beams.is-idle,
+.radar-target-layer.is-idle {
+  opacity: 0;
+}

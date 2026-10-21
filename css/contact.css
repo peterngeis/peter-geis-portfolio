@@ -1,0 +1,73 @@
+/*
+ * contact.css
+ * The contact block and footer.
+ */
+
+.contact {
+  background: var(--lavender);
+  color: var(--on-lavender);
+  padding: clamp(96px, 16vh, 180px) 0 clamp(28px, 4vh, 44px);
+}
+
+.contact h2 {
+  color: var(--on-lavender);
+  font-size: clamp(64px, 13vw, 230px);
+}
+
+.contact .contact-intro {
+  margin-top: clamp(24px, 4vh, 40px);
+  max-width: 40ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+}
+
+.email-link {
+  display: inline-block;
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: clamp(26px, 4.4vw, 66px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.16em;
+  overflow-wrap: anywhere;
+}
+
+.email-link:hover {
+  text-decoration-thickness: 6px;
+}
+
+.contact .contact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.contact .pill.filled {
+  background: #000000;
+  color: #FFFFFF;
+  border-color: #000000;
+}
+
+.contact .pill.filled:hover {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
+}
+
+.contact .pill:not(.filled):hover {
+  background: var(--on-lavender);
+  color: var(--lavender);
+  border-color: var(--on-lavender);
+}
+
+.footer-credits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: clamp(80px, 16vh, 160px);
+  padding-top: 18px;
+  border-top: 1.5px solid currentColor;
+  font-size: 14px;
+  font-weight: 500;
+}

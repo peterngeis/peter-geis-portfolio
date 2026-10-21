@@ -4,28 +4,30 @@
  * when they scroll away. Visitors who prefer reduced motion keep the play controls instead,
  * and so does anyone whose browser blocks autoplay.
  */
-(function (S) {
+(function (Site) {
   "use strict";
-  var vids = Array.prototype.slice.call(document.querySelectorAll("video[data-autoplay]"));
-  if (!vids.length || !S.motion || !("IntersectionObserver" in window)) {
+
+  const videos = Array.from(document.querySelectorAll("video[data-autoplay]"));
+  if (!videos.length || !Site.motionEnabled || !("IntersectionObserver" in window)) {
     return;
   }
 
-  vids.forEach(function (v) {
-    v.muted = true;
-    v.removeAttribute("controls");
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          var p = v.play();
-          if (p && p.catch) {
-            p.catch(function () { v.setAttribute("controls", ""); });
+  videos.forEach((video) => {
+    video.muted = true;
+    video.removeAttribute("controls");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const playPromise = video.play();
+          if (playPromise && playPromise.catch) {
+            playPromise.catch(() => { video.setAttribute("controls", ""); });
           }
         } else {
-          v.pause();
+          video.pause();
         }
       });
     }, { threshold: 0.25 });
-    io.observe(v);
+    observer.observe(video);
   });
 })(window.Site);

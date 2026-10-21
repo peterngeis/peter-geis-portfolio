@@ -1,0 +1,80 @@
+/*
+ * senior-design.css
+ * Senior design: the team banner, the payload protection device write-up, and its photos and video.
+ * Script: js/video.js plays the drop test clip.
+ */
+
+/* senior design */
+.senior-design {
+  padding: var(--section-gap) 0;
+}
+
+.banner {
+  margin: calc(var(--section-gap) * 2) 0 0;
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2400 / 719;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* One line at every width: the type shrinks a little on narrow phones (13px from about 380px wide and up). */
+.banner .caption {
+  padding: 0 var(--gutter);
+  white-space: nowrap;
+  font-size: clamp(11px, 3.4vw, 13px);
+}
+
+/* The MTS photo sets the height; the sensor assembly stays square and the foam photo crops to fill the rest. */
+.payload-media {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-rows: auto 1fr;
+  gap: 16px 12px;
+}
+
+.payload-media figure {
+  margin: 0;
+}
+
+.payload-media .tall {
+  grid-row: span 2;
+}
+
+.payload-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.payload-media .tall img {
+  aspect-ratio: 3 / 4.4;
+  max-height: calc(100svh - var(--nav-height) - 80px);
+}
+
+.payload-media .square img {
+  aspect-ratio: 1 / 1;
+}
+
+.payload-media .fill-height {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.payload-media .fill-height img,
+.payload-media .fill-height video {
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: 50% 60%;
+  border-radius: 4px;
+  display: block;
+  background: var(--slate);
+}

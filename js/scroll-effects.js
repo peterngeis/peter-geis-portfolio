@@ -5,6 +5,7 @@
  *   2. the "Field photos" strip that scrolls sideways
  *   3. the experience timeline's rolling year and progress rail
  *   4. the toolkit ticker
+ *   5. the solid top bar on phones while the experience timeline is on screen
  */
 (function (S) {
   "use strict";
@@ -15,7 +16,9 @@
   var STATEMENT = {
     dimOpacity: 0.16,    // opacity of words that haven't filled in yet
     startAt: 0.82,       // words start filling when the statement's top reaches this fraction of the screen
-    span: 0.32           // extra scroll (in screen heights) over which the fill completes
+    span: 0.32,          // extra scroll (in screen heights) over which the fill completes
+    dwellStartAt: 0.4,   // when the intro pauses on screen: words start filling as the frame's top rises to this fraction of the screen height...
+    dwellFinishAt: 0.85  // ...and finish this far (0 to 1) through the pause, so most of the filling happens while it holds
   };
 
   var TICKER = {
@@ -40,7 +43,8 @@
       words.push(s); wordOpacity.push(-1);
     });
   }
-  // Scales the introduction photo so the statement, and caption fit on one screen together. 
+  // Scales the introduction photo (never crops it) so the statement, photo, and caption fit on one
+  // screen together. The figure gets an explicit width, so the caption wraps to the photo's width.
   var MIN_PHOTO_H = 220;   // smallest the photo may shrink to, in pixels tall
   function fitStmtPhoto() {
     var fig = document.querySelector(".stmt-fig");
@@ -63,8 +67,21 @@
   }
 
   function measureStmt() { sTop = S.absTop(stmt); sH = stmt.offsetHeight; }
+
+  // 0 to 1: how much of the statement has filled in.
+  function stmtProgress() {
+    var f = S.frames.intro;
+    if (f && f.active) {
+      // The intro pauses on screen (js/dwell.js), so tie the fill to that pause: it starts as the frame
+      // rises and finishes partway through the hold.
+      var start = f.wrapTop - S.vh * STATEMENT.dwellStartAt;
+      var end = f.pinStart + (f.pinEnd - f.pinStart) * STATEMENT.dwellFinishAt;
+      return clamp((S.scrollY - start) / Math.max(1, end - start), 0, 1);
+    }
+    return clamp((S.scrollY + S.vh * STATEMENT.startAt - sTop) / (sH + S.vh * STATEMENT.span), 0, 1);
+  }
   function updateStmt() {
-    var p = clamp((S.scrollY + S.vh * STATEMENT.startAt - sTop) / (sH + S.vh * STATEMENT.span), 0, 1);
+    var p = stmtProgress();
     var c = p * words.length * 1.08;
     for (var i = 0; i < words.length; i++) {
       var o = Math.round((STATEMENT.dimOpacity + (1 - STATEMENT.dimOpacity) * clamp(c - i, 0, 1)) * 100) / 100;
@@ -81,9 +98,17 @@
   var nProg = notes.querySelector(".notes-prog i"), nTop = 0, nDist = 1;
   var lastStrip = "", lastProgVis = "";
 
+  // Decode every photo up front so none pops in (or flashes) while swiping.
+  Array.prototype.forEach.call(strip.querySelectorAll("img"), function (img) {
+    if (img.decode) {
+      img.decode().catch(function () {});
+    }
+  });
+
   // The section is made exactly tall enough that scrolling down moves the strip across once.
+  // The strip's transform is left alone while measuring: clearing it (even briefly) showed up as a
+  // one-frame flash back to the first photo whenever a phone's address bar caused a resize mid-scroll.
   function measureNotes() {
-    strip.style.transform = "none";
     nDist = Math.max(1, strip.scrollWidth - S.vw);
     notes.style.height = (nDist + S.vh) + "px";
     nTop = S.absTop(notes);
@@ -136,7 +161,8 @@
     // Touch: vertical swipes scroll natively (touch-action: pan-y in css/sections.css);
     // horizontal swipes come here, and the photos follow the finger.
     var stage = notes.querySelector(".notes-stage");
-    var touchId = null, lastX = 0, lastT = 0, speed = 0, glide = 0;
+    var touchId = null, startX = 0, startY = 0, lastX = 0, lastT = 0, speed = 0, glide = 0, axis = "";
+    var AXIS_LOCK = 8;   // pixels a finger must move before the swipe is called horizontal or vertical
 
     stage.addEventListener("pointerdown", function (e) {
       if (e.pointerType !== "touch") {
@@ -144,13 +170,30 @@
       }
       cancelAnimationFrame(glide);
       touchId = e.pointerId;
-      lastX = e.clientX;
+      startX = lastX = e.clientX;
+      startY = e.clientY;
       lastT = e.timeStamp;
       speed = 0;
+      axis = "";
     });
 
     stage.addEventListener("pointermove", function (e) {
       if (e.pointerId !== touchId) {
+        return;
+      }
+      if (axis === "") {
+        // Decide once, then stick with it: clearly sideways swipes move the photos; anything else
+        // (vertical or diagonal) is left to the browser's own scrolling so the two never fight.
+        var mx = Math.abs(e.clientX - startX), my = Math.abs(e.clientY - startY);
+        if (mx < AXIS_LOCK && my < AXIS_LOCK) {
+          return;
+        }
+        axis = mx > my * 1.25 ? "x" : "y";
+        lastX = e.clientX;
+        lastT = e.timeStamp;
+        return;
+      }
+      if (axis !== "x") {
         return;
       }
       var dx = e.clientX - lastX, dt = Math.max(1, e.timeStamp - lastT);
@@ -160,11 +203,17 @@
       speed = 0.75 * speed + 0.25 * (-dx / dt);
     });
 
-    function endTouch(e) {
+    function endTouch(e, cancelled) {
       if (e.pointerId !== touchId) {
         return;
       }
       touchId = null;
+      var wasSideways = axis === "x";
+      axis = "";
+      // No glide after a vertical or diagonal swipe, or when the browser took over the gesture.
+      if (!wasSideways || cancelled) {
+        return;
+      }
       var v = speed, prev = performance.now();
       // Let a quick flick keep gliding and ease to a stop.
       function step(now) {
@@ -180,8 +229,8 @@
         glide = requestAnimationFrame(step);
       }
     }
-    stage.addEventListener("pointerup", endTouch);
-    stage.addEventListener("pointercancel", endTouch);
+    stage.addEventListener("pointerup", function (e) { endTouch(e, false); });
+    stage.addEventListener("pointercancel", function (e) { endTouch(e, true); });
 
     // Keyboard: Right and Left arrows step through the photos.
     document.addEventListener("keydown", function (e) {
@@ -280,10 +329,34 @@
     });
   }
 
+  /* ---------- 5. Solid top bar on phones during the experience timeline ---------- */
+
+  // Elsewhere the top bar inverts the colors underneath it. Over the timeline, whose text scrolls right
+  // under the bar, a solid background reads better. css/responsive.css styles .nav-solid on phones only.
+  var navEl = document.querySelector(".nav");
+  var solidZones = Array.prototype.slice.call(document.querySelectorAll(".exp"));
+  var navH = 56, lastSolid = false;
+  function updateNav() {
+    var solid = false;
+    if (S.vw <= 760) {
+      for (var i = 0; i < solidZones.length; i++) {
+        var r = solidZones[i].getBoundingClientRect();
+        if (r.top <= navH && r.bottom > navH) {
+          solid = true;
+        }
+      }
+    }
+    if (solid !== lastSolid) {
+      navEl.classList.toggle("nav-solid", solid);
+      lastSolid = solid;
+    }
+  }
+
   /* ---------- Hook into the loop ---------- */
 
+  S.onMeasure(fitStmtPhoto, 10);   // runs before the scroll pauses (js/dwell.js), which depend on its result
   S.onMeasure(function () {
-    fitStmtPhoto();
+    navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 56;
     fitOdo();
     if (motion) {
       measureStmt();
@@ -298,5 +371,6 @@
       updateKit(dt);
     }
     updateDial();
+    updateNav();
   });
 })(window.Site);

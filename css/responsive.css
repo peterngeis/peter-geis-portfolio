@@ -1,43 +1,175 @@
 /*
  * responsive.css
  * Tablet and phone layouts, plus turning animation off for visitors who prefer reduced motion.
- * Keep this file last so these rules win.
+ * Keep this file last in index.html so its rules win.
  */
 
-/* ============ Responsive ============ */
 @media (max-width: 960px) {
-  .feature, .feature.ppd { grid-template-columns: minmax(0, 1fr); }
-  .off-head { grid-template-columns: minmax(0, 1fr); }
-}
-@media (max-width: 760px) {
-  :root { --nav-h: 56px; }
-  /* Phones: keep On the clock and Off the clock in the top bar; Contact and Résumé are both in the contact section. */
-  .nav-links a[href="#contact"], .nav-links .pill { display: none; }
-  .nav-links { gap: 16px; font-size: 14px; }
-  .hero-meta { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .cue { display: none; }
-  .split { flex-direction: column; min-height: 0; }
-  .panel { min-height: 64vh; min-height: 64svh; }
-  .panel:hover, .panel:focus-visible { flex-grow: 1; }
-  .p-img { opacity: 1; transform: none; }
-  .panel.pn-off .p-img { transform: none; }
-  .exp-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .dial { top: var(--nav-h); z-index: 5; background: var(--paper); display: flex; align-items: center; gap: 18px; padding: 10px 0 12px; margin: 0 calc(var(--g) * -1); padding-left: var(--g); padding-right: var(--g); border-bottom: 1.5px solid var(--line); }
-  .odo { font-size: 52px; }
-  .rail { flex: 1; margin: 0; }
-  .rail li::after { width: 12px; height: 12px; border-width: 2.5px; }
-  .dial-role { display: none; }
-  .stops { padding-top: 16px; }
-  .cards { grid-template-columns: minmax(0, 1fr); }
-  .banner img { aspect-ratio: 4 / 3; }
-  .notes-head p { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .feature,
+  .feature.payload {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .builds-header {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-/* Very narrow phones, require a tighter the top bar for both on/off the clock buttons. */
+@media (max-width: 760px) {
+  :root {
+    --nav-height: 56px;
+  }
+
+  /* Phones: keep On the clock and Off the clock in the top bar; Contact and Résumé are both in the contact section. */
+  .nav-links a[href="#contact"],
+  .nav-links .pill {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 16px;
+    font-size: 14px;
+  }
+
+  /* While the experience timeline is on screen (js/nav.js adds .is-solid), the top bar gets a solid
+     background instead of the color-inversion effect, so it never overlaps the text scrolling underneath. */
+  .nav {
+    transition: background-color 0.2s ease;
+  }
+
+  .nav.is-solid {
+    mix-blend-mode: normal;
+    background: var(--paper);
+  }
+
+  .hero-meta {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .cue {
+    display: none;
+  }
+
+  .split {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .panel {
+    min-height: 64vh;
+    min-height: 64svh;
+  }
+
+  .panel:hover,
+  .panel:focus-visible {
+    flex-grow: 1;
+  }
+
+  .panel-image {
+    opacity: 1;
+    transform: none;
+  }
+
+  .panel.panel-off-the-clock .panel-image {
+    transform: none;
+  }
+
+  .experience-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .dial {
+    top: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
+    z-index: 5;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 10px 0 12px;
+    margin: 0 calc(var(--gutter) * -1);
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    border-bottom: 1.5px solid var(--line);
+  }
+
+  .odometer {
+    font-size: 52px;
+  }
+
+  .rail {
+    flex: 1;
+    margin: 0;
+  }
+
+  .rail li::after {
+    width: 12px;
+    height: 12px;
+    border-width: 2.5px;
+  }
+
+  .dial-title {
+    display: none;
+  }
+
+  .timeline {
+    padding-top: 16px;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The phone version of the team photo is not cropped: the image box matches its natural shape. */
+  .banner img {
+    aspect-ratio: 1200 / 766;
+    object-fit: contain;
+  }
+
+  .field-photos-header p {
+    display: none;
+  }
+
+  /* Build photo caption: the instructions wrap in their own column, so the Scroll cue sits beside them
+  at the bottom right instead of dropping onto a row of its own underneath. */
+  .frame-caption {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 8px 16px;
+  }
+
+  .frame-caption h2 {
+    grid-column: 1 / -1;
+  }
+
+  .frame-caption p:not(.cue) {
+    grid-column: 1;
+  }
+
+  .frame-caption .cue {
+    grid-column: 2;
+    margin: 0 0 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Very narrow phones (iPhone SE and similar): tighten the top bar so it stays on one line. */
 @media (max-width: 360px) {
-  .brand { font-size: 15px; }
-  .nav-links { gap: 12px; font-size: 13px; }
+  .brand {
+    font-size: 15px;
+  }
+
+  .nav-links {
+    gap: 12px;
+    font-size: 13px;
+  }
 }

@@ -1,7 +1,14 @@
 /*
  * sections.css
- * Introduction statement, Field photos strip, On/Off the clock split, and the experience timeline.
+ * Introduction statement, scroll-pause frames, Field photos strip, On/Off the clock split, and the experience timeline.
  */
+
+/* ============ Scroll-pause frames (see js/dwell.js) ============ */
+.dwell { position: relative; }
+/* js/dwell.js adds .is-pinned and sets --dwell-top and the wrapper's min-height when a frame fits on screen. */
+.dwell.is-pinned > :first-child { position: sticky; top: var(--dwell-top, 0px); }
+/* While the page is measuring layout, pinned frames sit at their natural spot so positions are exact. */
+html.measuring .dwell.is-pinned > :first-child { position: relative; top: auto; }
 
 /* ============ Statement ============ */
 .statement { padding: clamp(100px, 22vh, 220px) 0 clamp(80px, 16vh, 160px); }

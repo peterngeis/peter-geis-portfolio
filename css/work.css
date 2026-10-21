@@ -47,7 +47,8 @@
 .sd { padding: var(--gap) 0; }
 .banner { margin: calc(var(--gap) * 2) 0 0; }
 .banner img { width: 100%; height: auto; aspect-ratio: 2400 / 719; object-fit: cover; object-position: 50% 50%; }
-.banner .cap { padding: 0 var(--g); }
+/* One line at every width: the type shrinks a little on narrow phones (13px from about 380px wide and up). */
+.banner .cap { padding: 0 var(--g); white-space: nowrap; font-size: clamp(11px, 3.4vw, 13px); }
 /* The MTS photo sets the height; the sensor assembly stays square and the foam photo crops to fill the rest. */
 .ppd-media { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); grid-template-rows: auto 1fr; gap: 16px 12px; }
 .ppd-media figure { margin: 0; }
