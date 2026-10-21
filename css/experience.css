@@ -22,6 +22,8 @@
 }
 
 .dial {
+  /* The progress rail and the job title under it share this width, so the title only wraps when it truly doesn't fit. */
+  --dial-content-width: 460px;
   position: sticky;
   top: calc(var(--nav-height) + 5vh);
 }
@@ -57,7 +59,7 @@
   align-items: center;
   padding: 0;
   margin: clamp(20px, 4vh, 36px) 0 0;
-  max-width: 460px;
+  max-width: var(--dial-content-width);
 }
 
 .rail li {
@@ -108,7 +110,7 @@
   font-size: 19px;
   font-weight: 600;
   color: var(--ink);
-  max-width: 24ch;
+  max-width: var(--dial-content-width);
   min-height: 3em;
   line-height: 1.3;
 }

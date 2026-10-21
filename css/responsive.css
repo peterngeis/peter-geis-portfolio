@@ -130,6 +130,10 @@
     display: none;
   }
 
+  .credential-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   /* Build photo caption: the instructions wrap in their own column, so the Scroll cue sits beside them
   at the bottom right instead of dropping onto a row of its own underneath. */
   .frame-caption {

@@ -187,8 +187,12 @@ window.Site = (function () {
       scheduleMeasure();
       setTimeout(() => { isSettling = false; }, HASH_SETTLE_DURATION);
     });
-    if (document.fonts && document.fonts.ready) {
+    if (document.fonts) {
+      // The web font usually arrives after the first measurement and changes how much room text takes.
+      // "ready" alone is not enough (it can already be resolved before the font starts loading),
+      // so also measure again every time a batch of fonts finishes loading.
       document.fonts.ready.then(scheduleMeasure);
+      document.fonts.addEventListener("loadingdone", scheduleMeasure);
     }
     measureLayout();
     requestAnimationFrame(animationLoop);

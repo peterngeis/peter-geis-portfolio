@@ -121,7 +121,7 @@
   let revealRadius = 0;              // reveal circle: current radius, the radius it's easing toward, and its full size
   let revealRadiusGoal = 0;
   let revealRadiusFull = 150;
-  let mode = "scan";                 // "scan" (idle), "track" (cursor), or "lock" (tap on phones)
+  let mode = "scan";                 // "scan" (idle), "track" (cursor), or "lock" (finger down on phones)
   let pulsePhase = "out";            // "out", "back", or "gap" (the pause after an echo returns)
   let phaseStartTime = performance.now();
   let echoArrivedTime = -1e9;
@@ -248,7 +248,7 @@
   });
 
   // Phones: keep tracking the finger while it drags to scroll, not just on a tap.
-  // Passive listeners never block scrolling. The last position stays locked after the finger lifts.
+  // Passive listeners never block scrolling.
   function followTouch(event) {
     const touch = event.touches && event.touches[0];
     if (!touch) {
@@ -260,8 +260,19 @@
     mode = "lock";
     revealRadiusGoal = revealRadiusFull;
   }
+  // When the finger lifts, the radar goes back to scanning on its own.
+  function releaseTouch(event) {
+    if (event.touches && event.touches.length > 0) {
+      return;   // another finger is still down
+    }
+    mode = "scan";
+    revealRadiusGoal = 0;
+  }
+
   heroElement.addEventListener("touchstart", followTouch, { passive: true });
   heroElement.addEventListener("touchmove", followTouch, { passive: true });
+  heroElement.addEventListener("touchend", releaseTouch, { passive: true });
+  heroElement.addEventListener("touchcancel", releaseTouch, { passive: true });
 
   /* ---------- Per-frame update ---------- */
 

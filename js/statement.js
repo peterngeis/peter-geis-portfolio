@@ -17,7 +17,15 @@
     pauseFinishAt: 0.85  // ...and finish this far (0 to 1) through the pause, so most of the filling happens while it holds
   };
 
-  const MINIMUM_PHOTO_HEIGHT = 220;   // smallest the photo may shrink to, in pixels tall
+  const MINIMUM_PHOTO_HEIGHT = 220;     // smallest the photo may shrink to, in pixels tall
+  const STACKED_MAXIMUM_WIDTH = 860;   // at or below this width the photo sits above the paragraphs (matches css/statement.css)
+
+  const STATEMENT_PHOTO = {
+    maxShare: 0.575,      // the photo's widest size, as a fraction of the width of the grid it sits in
+    shrinkStep: 0.94,     // each time the photo block is too tall, it shrinks by this factor and is measured again
+    maxAttempts: 24,      // safety limit for that loop
+    bottomMargin: 24      // pixels of breathing room kept below the photo row
+  };
 
   /* ---------- Word-by-word fill ---------- */
 
@@ -77,8 +85,9 @@
 
   /* ---------- Photo sizing ---------- */
 
-  // Scales the introduction photo (never crops it) so the statement, photo, and caption fit on one
-  // screen together. The figure gets an explicit width, so the caption wraps to the photo's width.
+  // Sizes the Sensō-ji photo (never cropping it) so the statement, the photo, and the paragraphs all fit on
+  // one screen together. Side by side, the photo takes as much of the width as the height allows and the
+  // paragraphs take the rest. Stacked (phones), only the photo and its caption share the room.
   function fitStatementPhoto() {
     const figure = document.querySelector(".statement-figure");
     if (!figure) {
@@ -86,20 +95,39 @@
     }
     const image = figure.querySelector("img");
     const caption = figure.querySelector("figcaption");
+    const copy = document.querySelector(".statement-copy");
     const grid = figure.parentNode;
 
-    figure.style.width = "";
-    const columnWidth = figure.offsetWidth;
     const aspectRatio = parseFloat(image.getAttribute("width")) / parseFloat(image.getAttribute("height"));
+    const minimumWidth = Math.ceil(MINIMUM_PHOTO_HEIGHT * aspectRatio);
     const navHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-height")) || 64;
     const gridGap = parseFloat(getComputedStyle(grid).marginTop) || 0;
+    const roomForGrid = Site.viewportHeight - navHeight - statementText.offsetHeight - gridGap - STATEMENT_PHOTO.bottomMargin;
 
-    // Two passes: narrowing the photo can wrap the caption onto a second line, which needs room too.
-    for (let pass = 0; pass < 2; pass++) {
-      const captionHeight = caption ? caption.offsetHeight + parseFloat(getComputedStyle(caption).marginTop) : 0;
-      const availableHeight = Site.viewportHeight - navHeight - statementText.offsetHeight - gridGap - captionHeight - 24;
-      const photoWidth = Math.min(columnWidth, Math.max(MINIMUM_PHOTO_HEIGHT, availableHeight) * aspectRatio);
-      figure.style.width = Math.floor(photoWidth) + "px";
+    grid.style.gridTemplateColumns = "";
+    figure.style.width = "";
+
+    if (Site.viewportWidth <= STACKED_MAXIMUM_WIDTH) {
+      const columnWidth = figure.offsetWidth;
+      // Two passes: narrowing the photo can wrap the caption onto a second line, which needs room too.
+      for (let pass = 0; pass < 2; pass++) {
+        const captionHeight = caption ? caption.offsetHeight + parseFloat(getComputedStyle(caption).marginTop) : 0;
+        const photoWidth = Math.min(columnWidth, Math.max(MINIMUM_PHOTO_HEIGHT, roomForGrid - captionHeight) * aspectRatio);
+        figure.style.width = Math.floor(photoWidth) + "px";
+      }
+      return;
+    }
+
+    // Side by side: start at the widest the photo may be, and shrink it until the taller of the photo block
+    // and the paragraphs fits. A narrower photo also gives the paragraphs more width, so they get shorter too.
+    let photoWidth = Math.floor(grid.clientWidth * STATEMENT_PHOTO.maxShare);
+    for (let attempt = 0; attempt < STATEMENT_PHOTO.maxAttempts; attempt++) {
+      grid.style.gridTemplateColumns = photoWidth + "px minmax(0, 1fr)";
+      const rowHeight = Math.max(figure.offsetHeight, copy.offsetHeight);
+      if (rowHeight <= roomForGrid || photoWidth <= minimumWidth) {
+        break;
+      }
+      photoWidth = Math.max(minimumWidth, Math.floor(photoWidth * STATEMENT_PHOTO.shrinkStep));
     }
   }
 

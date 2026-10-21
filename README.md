@@ -4,8 +4,7 @@ A static site with HTML, CSS, JS, and an `images/` folder.
 
 ## How the project is organized
 
-The page is a stack of sections. Each section has one stylesheet
-and, in most cases, one script, and the files share the section's name.
+The page is a stack of sections. Each section has one stylesheet and, where it needs one, one script, and the files share the section's name.
 
 | Page section | Stylesheet | Script |
 | --- | --- | --- |
@@ -21,6 +20,7 @@ and, in most cases, one script, and the files share the section's name.
 | My current build (zooming photo, part points) | `css/build-photo.css` | `js/build-photo.js` |
 | Build cards and drawer | `css/builds.css` | `js/drawer.js` |
 | Toolkit ticker | `css/toolkit.css` | `js/toolkit.js` |
+| Credentials (certifications and hands-on qualifications) | `css/credentials.css` | |
 | Contact and footer | `css/contact.css` | |
 | Phone and tablet layouts, reduced motion | `css/responsive.css` (keep last) | |
 | Top bar background on phones | | `js/nav.js` |

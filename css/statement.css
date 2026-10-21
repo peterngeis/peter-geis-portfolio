@@ -9,7 +9,8 @@
 }
 
 .statement-text {
-  font-size: clamp(30px, 4.5vw, 70px);
+  /* 70px up to 1920px wide, then it grows with the screen so the introduction keeps its proportions on large monitors. */
+  font-size: clamp(30px, 4.5vw, max(70px, 3.65vw));
   line-height: 1.08;
   font-weight: 600;
   letter-spacing: -0.028em;
@@ -22,9 +23,9 @@
 }
 
 .statement-paragraph {
-  margin: clamp(40px, 8vh, 80px) 0 0 auto;
-  max-width: 46ch;
-  font-size: clamp(17px, 1.4vw, 20px);
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(17px, 1.4vw, max(20px, 1.04vw));
   line-height: 1.6;
 }
 
@@ -34,8 +35,10 @@
 
 .statement-grid {
   display: grid;
+  /* js/statement.js replaces these columns with the photo's fitted width and leaves the rest to the paragraphs.
+     This is the starting layout before the script runs. */
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(28px, 5vw, 88px);
+  gap: clamp(28px, 5vw, max(88px, 4.6vw));
   align-items: start;
   margin-top: clamp(40px, 8vh, 80px);
 }
@@ -45,7 +48,7 @@
   max-width: 100%;
 }
 
-/* width is set by js/statement.js so the photo fits on screen with the statement */
+/* The photo's size is set by js/statement.js so the statement, photo, and paragraphs fit on screen together. */
 .statement-figure img {
   width: 100%;
   height: auto;
@@ -58,15 +61,6 @@
 
 .statement-figure .caption {
   text-wrap: balance;
-}
-
-.statement-copy .statement-paragraph {
-  margin: 0;
-  max-width: 46ch;
-}
-
-.statement-copy .statement-paragraph + .statement-paragraph {
-  margin-top: 1.1em;
 }
 
 @media (max-width: 860px) {
