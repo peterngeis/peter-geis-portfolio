@@ -6,6 +6,9 @@
 
 /* ============ Reveal: the build ============ */
 .reveal { position: relative; }
+/* Links to #off land with the photo's top at the top of the screen, just before the zoom starts.
+   (Cancels the nav-bar offset that other anchors use.) */
+.reveal { scroll-margin-top: calc(-1 * (env(safe-area-inset-top, 0px) + var(--nav-h))); }
 .stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
 /* How long the photo stays pinned: this height minus one screen (190vh = 90vh of scrolling). */
 html.motion .reveal { height: 190vh; }

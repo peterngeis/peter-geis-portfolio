@@ -4,7 +4,8 @@
  */
 
 /* ============ Off the clock ============ */
-.off { padding: var(--gap) 0 calc(var(--gap) * 2); }
+/* The build photo above has no black space of its own, so this section supplies the full 2 x gap. */
+.off { padding: calc(var(--gap) * 2) 0; }
 .off-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: 32px; align-items: end; margin-bottom: calc(var(--gap) * 2); }
 .off-head h2 { font-size: clamp(48px, 9vw, 150px); }
 .off-head p { font-size: clamp(17px, 1.4vw, 20px); max-width: 38ch; }
