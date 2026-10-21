@@ -134,6 +134,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* On phones the contact heading can be larger than its desktop minimum, since the screen is tall and narrow. */
+  .contact h2 {
+    font-size: clamp(64px, min(20vw, 21vh), 110px);
+  }
+
   /* Build photo caption: the instructions wrap in their own column, so the Scroll cue sits beside them
   at the bottom right instead of dropping onto a row of its own underneath. */
   .frame-caption {

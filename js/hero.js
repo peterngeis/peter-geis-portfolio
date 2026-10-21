@@ -15,8 +15,8 @@
     pulseLength: 44,      // length of each pulse, in pixels
     echoPause: 40,        // milliseconds to wait after an echo returns before the next pulse
     pingDuration: 380,    // milliseconds the ring at the target takes to fade
-    // Which character of the ASCII drawing the beam leaves from, counting from 1.
-    // Line 7, column 35 is the middle "#" of the main array.
+    // Which character of the ASCII drawing the beam leaves from, counting from 1 at the first row of the drawing
+    // (not counting the line break after the opening <span> tag). Line 7, column 35 is the middle "#" of the main array.
     emitterLine: 7,
     emitterColumn: 35
   };
@@ -87,6 +87,9 @@
   const targetPing = radarTargetLayer.querySelector(".target-ping");
   const target = radarTargetLayer.querySelector(".target");
   const targetLabel = radarTargetLayer.querySelector(".target-label");
+  
+  // Remove the first endline in the Radar 
+  radarArt.textContent = radarArt.textContent.slice(1);
 
   // The ASCII drawing's size is read from the text itself, so you can redraw it freely (spaces only, no tabs).
   const artLines = radarArt.textContent.split("\n");
