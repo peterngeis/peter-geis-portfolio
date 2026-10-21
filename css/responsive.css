@@ -11,7 +11,9 @@
 }
 @media (max-width: 760px) {
   :root { --nav-h: 56px; }
-  .nav-links a:not(.pill) { display: none; }
+  /* Phones: keep On the clock and Off the clock in the top bar; Contact and Résumé are both in the contact section. */
+  .nav-links a[href="#contact"], .nav-links .pill { display: none; }
+  .nav-links { gap: 16px; font-size: 14px; }
   .hero-meta { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .cue { display: none; }
   .split { flex-direction: column; min-height: 0; }
@@ -32,4 +34,10 @@
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Very narrow phones, require a tighter the top bar for both on/off the clock buttons. */
+@media (max-width: 360px) {
+  .brand { font-size: 15px; }
+  .nav-links { gap: 12px; font-size: 13px; }
 }
