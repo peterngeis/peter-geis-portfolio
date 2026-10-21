@@ -40,6 +40,28 @@
       words.push(s); wordOpacity.push(-1);
     });
   }
+  // Scales the introduction photo so the statement, and caption fit on one screen together. 
+  var MIN_PHOTO_H = 220;   // smallest the photo may shrink to, in pixels tall
+  function fitStmtPhoto() {
+    var fig = document.querySelector(".stmt-fig");
+    if (!fig) {
+      return;
+    }
+    var img = fig.querySelector("img"), cap = fig.querySelector("figcaption"), grid = fig.parentNode;
+    fig.style.width = "";
+    var colW = fig.offsetWidth;
+    var ratio = parseFloat(img.getAttribute("width")) / parseFloat(img.getAttribute("height"));
+    var navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 64;
+    var gap = parseFloat(getComputedStyle(grid).marginTop) || 0;
+    // Two passes: narrowing the photo can wrap the caption onto a second line, which needs room too.
+    for (var pass = 0; pass < 2; pass++) {
+      var capH = cap ? cap.offsetHeight + parseFloat(getComputedStyle(cap).marginTop) : 0;
+      var availH = S.vh - navH - stmt.offsetHeight - gap - capH - 24;
+      var w = Math.min(colW, Math.max(MIN_PHOTO_H, availH) * ratio);
+      fig.style.width = Math.floor(w) + "px";
+    }
+  }
+
   function measureStmt() { sTop = S.absTop(stmt); sH = stmt.offsetHeight; }
   function updateStmt() {
     var p = clamp((S.scrollY + S.vh * STATEMENT.startAt - sTop) / (sH + S.vh * STATEMENT.span), 0, 1);
@@ -261,6 +283,7 @@
   /* ---------- Hook into the loop ---------- */
 
   S.onMeasure(function () {
+    fitStmtPhoto();
     fitOdo();
     if (motion) {
       measureStmt();

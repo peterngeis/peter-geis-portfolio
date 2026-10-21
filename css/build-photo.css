@@ -26,6 +26,9 @@ html.motion .cover { transform: scale(1.4634, 1.5789); will-change: transform; }
 .frame-cap p { font-size: 15px; color: rgba(255, 255, 255, 0.82); }
 html.motion .frame-cap { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
 html.motion .reveal.hot .frame-cap { opacity: 1; transform: none; }
+/* The same Scroll cue as the landing screen, in white, shown on phones too. */
+.frame-cap .cue { display: flex; margin-left: auto; color: #FFFFFF; }
+.frame-cap .cue i { background: #FFFFFF; }
 .h-touch { display: none; }
 @media (hover: none) { .h-touch { display: inline; } .h-hover { display: none; } }
 
