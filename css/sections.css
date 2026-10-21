@@ -31,7 +31,8 @@
 .note figcaption { margin-top: 12px; display: flex; flex-direction: column; font-size: 14px; color: var(--muted); }
 .note figcaption b { color: var(--ink); font-size: 16px; font-weight: 600; }
 .notes-prog { display: none; }
-html.motion .notes-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; padding: calc(var(--nav-h) + 3vh) 0 0; }
+/* pan-y: the browser handles vertical swipes; horizontal swipes go to js/scroll-effects.js to move the strip. */
+html.motion .notes-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; padding: calc(var(--nav-h) + 3vh) 0 0; touch-action: pan-y; }
 html.motion .strip { overflow: visible; will-change: transform; scroll-snap-type: none; }
 html.motion .strip::after { content: ""; flex: none; width: 8vw; height: 1px; }
 html.motion .notes-prog { display: block; position: absolute; left: var(--g); right: var(--g); bottom: clamp(20px, 4vh, 40px); height: 2px; background: var(--line); }

@@ -83,6 +83,99 @@
     }
   }
 
+  // Sideways input moves the strip too: trackpad swipes, Shift+wheel, touch swipes, and arrow keys.
+  // Each is turned into ordinary page scroll, so right/down move forward and left/up move back,
+  // and the same animation plays. Past either end, the page simply keeps scrolling.
+  var SWIPE = {
+    keyStep: 0.45,    // arrow keys move this fraction of a screen height
+    glideDecay: 0.94  // how quickly a touch flick slows down after the finger lifts (closer to 1 = longer glide)
+  };
+
+  function stripActive() {
+    var r = notes.getBoundingClientRect();
+    return r.top < S.vh * 0.5 && r.bottom > S.vh * 0.5;
+  }
+
+  function scrollPage(dy, smooth) {
+    window.scrollBy({ top: dy, behavior: smooth ? "smooth" : "instant" });
+  }
+
+  if (motion) {
+    // Trackpads and Shift+wheel: horizontal wheel movement scrolls the page.
+    window.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || !stripActive()) {
+        return;
+      }
+      e.preventDefault();   // also stops the browser's swipe-to-go-back gesture here
+      var unit = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? S.vh : 1);
+      scrollPage(e.deltaX * unit, false);
+    }, { passive: false });
+
+    // Touch: vertical swipes scroll natively (touch-action: pan-y in css/sections.css);
+    // horizontal swipes come here, and the photos follow the finger.
+    var stage = notes.querySelector(".notes-stage");
+    var touchId = null, lastX = 0, lastT = 0, speed = 0, glide = 0;
+
+    stage.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "touch") {
+        return;
+      }
+      cancelAnimationFrame(glide);
+      touchId = e.pointerId;
+      lastX = e.clientX;
+      lastT = e.timeStamp;
+      speed = 0;
+    });
+
+    stage.addEventListener("pointermove", function (e) {
+      if (e.pointerId !== touchId) {
+        return;
+      }
+      var dx = e.clientX - lastX, dt = Math.max(1, e.timeStamp - lastT);
+      lastX = e.clientX;
+      lastT = e.timeStamp;
+      scrollPage(-dx, false);   // finger moving left = forward
+      speed = 0.75 * speed + 0.25 * (-dx / dt);
+    });
+
+    function endTouch(e) {
+      if (e.pointerId !== touchId) {
+        return;
+      }
+      touchId = null;
+      var v = speed, prev = performance.now();
+      // Let a quick flick keep gliding and ease to a stop.
+      function step(now) {
+        var dt = Math.min(48, now - prev);
+        prev = now;
+        scrollPage(v * dt, false);
+        v *= Math.pow(SWIPE.glideDecay, dt / 16.667);
+        if (Math.abs(v) > 0.03) {
+          glide = requestAnimationFrame(step);
+        }
+      }
+      if (Math.abs(v) > 0.1) {
+        glide = requestAnimationFrame(step);
+      }
+    }
+    stage.addEventListener("pointerup", endTouch);
+    stage.addEventListener("pointercancel", endTouch);
+
+    // Keyboard: Right and Left arrows step through the photos.
+    document.addEventListener("keydown", function (e) {
+      if ((e.key !== "ArrowRight" && e.key !== "ArrowLeft") || !stripActive()) {
+        return;
+      }
+      var t = e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) {
+        return;
+      }
+      e.preventDefault();
+      var step = S.vh * SWIPE.keyStep;
+      scrollPage(e.key === "ArrowRight" ? step : -step, true);
+    });
+  }
+
   /* ---------- 3. Experience: rolling year and rail ---------- */
 
   var stops = Array.prototype.slice.call(document.querySelectorAll(".stop"));
