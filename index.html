@@ -640,9 +640,9 @@
   </div>
 </template>
 
-<!-- Scripts. core.js must load first; the rest register with it. Layout steps run in priority order
-     (photo sizing, then scroll pauses, then everything that reads positions), so the order below only
-     matters between scripts of equal priority: field-photos.js comes before build-photo.js because the
+<!-- Scripts. core.js must load first; the rest register with it.
+     Layout steps run in priority order, e.g.
+     field-photos.js comes before build-photo.js because the
      field photos strip sets its own height, which moves everything below it. -->
 <script src="js/core.js" defer></script>
 <script src="js/scroll-pause.js" defer></script>
